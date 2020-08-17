@@ -5,14 +5,22 @@ import kha.math.Vector2;
 class Player {
     public var position:Vector2;
     public var velocity:Vector2;
-    var speed = 5;
-    var acceleration = 1;
+    public var maxJumps = 2;
+    var speed = 8;
+    var acceleration = 1.5;
     var deceleration = .8;
+    var jumpAcceleration = 10;
+
+    var airJumps = 0;
+
+    var gravity = .8;
+
     public function new() {
-        position = new Vector2();
+        position = new Vector2(100, 500);
         velocity = new Vector2();
     }
     public function update(input:Input) {
+
         // Left/right change horizontal velocity
         if (input.left) {
             velocity = velocity.add(new Vector2(-acceleration, 0));
@@ -23,12 +31,38 @@ class Player {
 
         // Decelerate on no input
         if (!input.left && !input.right) {
-            velocity = velocity.normalized().mult(Math.max(0, velocity.length - deceleration));
+            if (Math.abs(velocity.x) > deceleration) {
+                velocity.x += (velocity.x > 0) ? -deceleration : deceleration;
+            }else{
+                velocity.x = 0;
+            }
+        }
+        //Gravity
+        if (position.y > 500) {
+            position.y = 500;
+            velocity.y = 0;
+            airJumps = 0;
+        }else{
+            velocity = velocity.add(new Vector2(0, gravity));
         }
 
         // Cap velocity add speed and apply
-        velocity = velocity.normalized().mult(Math.min(velocity.length, speed));
+        velocity.x = Math.min(Math.abs(velocity.x), speed) * (velocity.x > 0 ? 1 : -1);
         position = position.add(velocity);
+
+        if (position.y > 500) {
+            position.y = 500;
+            velocity.y = 0;
+            airJumps = 0;
+        }
+    }
+
+    public function attemptJump() {
+        if (airJumps < maxJumps) {
+            airJumps++;
+
+            velocity.y = -jumpAcceleration;
+        }
     }
     public function render(g:kha.graphics2.Graphics) {
         g.color = kha.Color.Red;

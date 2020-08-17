@@ -15,6 +15,7 @@ class Main {
 			Assets.loadEverything(function () {
 				input = new Input();
 				player = new Player();
+				input.onJump = function() { player.attemptJump(); };
 
 				Scheduler.addTimeTask(function () { update(); }, 0, 1 / 60);
 				System.notifyOnFrames(function (frames) { render(frames[0]); });
