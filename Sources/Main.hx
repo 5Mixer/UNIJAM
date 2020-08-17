@@ -7,21 +7,28 @@ import kha.Scheduler;
 import kha.System;
 
 class Main {
-	public function new() {
+	var player:Player;
+	var input:Input;
+
+	function new() {
 		System.start({title: "Unijam", width: 1024, height: 768}, function (_) {
 			Assets.loadEverything(function () {
+				input = new Input();
+				player = new Player();
+
 				Scheduler.addTimeTask(function () { update(); }, 0, 1 / 60);
 				System.notifyOnFrames(function (frames) { render(frames[0]); });
 			});
 		});
 	}
-	static function update(): Void {
+	function update(): Void {
+		player.update(input);
 	}
 
-	static function render(framebuffer: Framebuffer): Void {
+	function render(framebuffer: Framebuffer): Void {
 		final g2 = framebuffer.g2;
 		g2.begin();
-
+		player.render(g2);
 		g2.end();
 	}
 
