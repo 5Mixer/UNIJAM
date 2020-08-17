@@ -90,7 +90,7 @@ class Tiled {
 
         var vertex_map_2d = [
 			for (i in 0...n_vertices) 
-			i => new Vector2(vertices[3*i]/5, vertices[(3*i)+1]/5)
+			i => new Vector2(vertices[3*i], vertices[(3*i)+1])
         ];
 
         for (i in 0 ... n_triangles) {

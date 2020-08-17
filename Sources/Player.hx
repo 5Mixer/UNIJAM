@@ -24,7 +24,7 @@ class Player {
     public function new() {
         position = new Vector2(100, 100);
         velocity = new Vector2();
-        tiled = new Tiled(kha.Assets.blobs.complex_polygon_tmx.toString());
+        tiled = new Tiled(kha.Assets.blobs.level1_tmx.toString());
         for (triangle in tiled.entities[0].triangles) {
             var vertices = [];
             for (point in triangle.points)
