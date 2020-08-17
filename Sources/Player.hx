@@ -19,10 +19,19 @@ class Player {
     var gravity = .8;
 
     // var worldGeom = Polygon.rectangle(0, 450, 500, 40);
-    var worldGeom = [Polygon.create(100, 850, 45, 500), Polygon.create(800, 850, 45, 500), Polygon.rectangle(800, 350, 500, 5)];
+    var worldGeom = [];
+    var tiled:Tiled;
     public function new() {
         position = new Vector2(100, 100);
         velocity = new Vector2();
+        tiled = new Tiled(kha.Assets.blobs.complex_polygon_tmx.toString());
+        for (triangle in tiled.entities[0].triangles) {
+            var vertices = [];
+            for (point in triangle.points)
+                vertices.push(new differ.math.Vector(point.x, point.y));
+
+            worldGeom.push(new Polygon(0,0, vertices));
+        }
     }
     public function update(input:Input) {
 
@@ -53,24 +62,11 @@ class Player {
             velocity = velocity.add(new Vector2(0, gravity));
         }
 
-        // if (position.y > 500) {
-        //     position.y = 500;
-        //     velocity.y = 0;
-        //     airJumps = 0;
-        // }else{
-        //     velocity = velocity.add(new Vector2(0, gravity));
-        // }
-
         // Cap velocity add speed and apply
         velocity.x = Math.min(Math.abs(velocity.x), speed) * (velocity.x > 0 ? 1 : -1);
         position = position.add(velocity);
 
         resolveCollisions();
-        // if (position.y > 500) {
-        //     position.y = 500;
-        //     velocity.y = 0;
-        //     airJumps = 0;
-        // }
     }
     function resolveCollisions() {
         var collides = false;
@@ -101,16 +97,8 @@ class Player {
     }
     public function render(g:kha.graphics2.Graphics) {
         g.color = kha.Color.Magenta;
-        var lastPoint = null;
+        tiled.entities[0].render(g);
         for (shape in worldGeom) {
-            for (point in shape.transformedVertices) {
-                if (lastPoint == null) {
-                    lastPoint = point;
-                    continue;
-                }
-                g.drawLine(lastPoint.x, lastPoint.y, point.x, point.y);
-                lastPoint = point;
-            }
             g.color = kha.Color.Red;
             g.fillRect(position.x, position.y, 10, 20);
             g.color = kha.Color.White;
