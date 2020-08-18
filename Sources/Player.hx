@@ -1,5 +1,6 @@
 package ;
 
+import rendering.RenderPass;
 import differ.shapes.Polygon;
 import differ.shapes.Shape;
 import kha.math.Vector2;
@@ -23,13 +24,15 @@ class Player {
     var jumpAcceleration = 10;
     var gravity = .8;
 
-    var entity:Dynamic;
-    var imageSheet:Dynamic;
+    var entity:EntityInstance;
+    var imageSheet:ImageSheet;
     var animation = "idle";
-    public function new() {
+    public function new(maskControlPass:rendering.RenderPass) {
         position = new Vector2(100, 100);
         velocity = new Vector2();
         size = new Vector2(40, 100);
+
+        maskControlPass.registerRenderer(renderMask);
 
 		imageSheet = ImageSheet.fromTexturePackerJsonArray(kha.Assets.blobs.player_packing_json.toString());
 		var spriter = Spriter.parseScml(kha.Assets.blobs.playerAnims_scml.toString());
@@ -96,12 +99,17 @@ class Player {
         }
     }
     public function render(g:kha.graphics2.Graphics) {
-        // g.drawRect(position.x-size.x/2, position.y-size.y, size.x, size.y);
+        var debug = false;
+        if (debug)
+            g.drawRect(position.x-size.x/2, position.y-size.y, size.x, size.y);
+    }
+    public function renderMask(pass:RenderPass) {
+        var g = pass.passImage.g2;
+
         var facingRight = velocity.x > 0;
         g.pushTransformation(g.transformation.multmat(kha.math.FastMatrix3.translation(position.x+(facingRight?-size.x/2:size.x/2),position.y)).multmat(kha.math.FastMatrix3.scale(.05 * (facingRight?1:-1),.05)));
-        
+        g.color = kha.Color.White;
         g.drawSpriter(imageSheet, entity, 0,0);
         g.popTransformation();
-		
     }
 }
