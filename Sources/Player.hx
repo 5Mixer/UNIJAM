@@ -5,6 +5,11 @@ import differ.sat.SAT2D;
 import differ.shapes.Shape;
 import kha.math.Vector2;
 
+import spriter.Spriter;
+import spriter.EntityInstance;
+import imagesheet.ImageSheet;
+using spriterkha.SpriterG2;
+
 class Player {
     public var position:Vector2;
     public var velocity:Vector2;
@@ -21,9 +26,18 @@ class Player {
     // var worldGeom = Polygon.rectangle(0, 450, 500, 40);
     var worldGeom = [];
     var tiled:Tiled;
+
+    var entity:Dynamic;
+    var imageSheet:Dynamic;
+    var animation = "idle";
     public function new() {
         position = new Vector2(100, 100);
         velocity = new Vector2();
+
+		imageSheet = ImageSheet.fromTexturePackerJsonArray(kha.Assets.blobs.player_packing_json.toString());
+		var spriter = Spriter.parseScml(kha.Assets.blobs.playerAnims_scml.toString());
+        entity = spriter.createEntity("entity_000");
+
         tiled = new Tiled(kha.Assets.blobs.level1_tmx.toString());
         for (triangle in tiled.entities[0].triangles) {
             var vertices = [];
@@ -34,6 +48,7 @@ class Player {
         }
     }
     public function update(input:Input) {
+        entity.step(1/60);
 
         // Left/right change horizontal velocity
         if (input.left) {
@@ -67,6 +82,14 @@ class Player {
         position = position.add(velocity);
 
         resolveCollisions();
+
+        if (Math.abs(velocity.x) < 2 && animation != "idle") {
+            entity.transition("idle",1);
+            animation = "idle";
+        }else if (Math.abs(velocity.x) > 2 && animation != "run"){
+            entity.transition("run",1);
+            animation = "run";
+        }
     }
     function resolveCollisions() {
         var collides = false;
@@ -96,12 +119,12 @@ class Player {
         }
     }
     public function render(g:kha.graphics2.Graphics) {
-        g.color = kha.Color.Magenta;
         tiled.entities[0].render(g);
-        for (shape in worldGeom) {
-            g.color = kha.Color.Red;
-            g.fillRect(position.x, position.y, 10, 20);
-            g.color = kha.Color.White;
-        }
+        
+        g.fillRect(position.x, position.y, 10, 20);
+        g.pushTransformation(g.transformation.multmat(kha.math.FastMatrix3.scale(.05,.05)).multmat(kha.math.FastMatrix3.translation(position.x*20,position.y*20)));
+        g.drawSpriter(imageSheet, entity, 0,0);
+        g.popTransformation();
+		
     }
 }

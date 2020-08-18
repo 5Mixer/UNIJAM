@@ -4,4 +4,8 @@ project.addShaders('Shaders/**');
 project.addSources('Sources');
 project.addLibrary('differ')
 project.addLibrary('poly2trihx')
+
+project.addLibrary('imagesheet')
+project.addLibrary('spriter')
+project.addLibrary('spriterkha')
 resolve(project);

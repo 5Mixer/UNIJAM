@@ -1,0 +1,44 @@
+{"frames": [
+
+{
+	"filename": "body.png",
+	"frame": {"x":0,"y":0,"w":1000,"h":3000},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":1000,"h":3000},
+	"sourceSize": {"w":1000,"h":3000}
+},
+{
+	"filename": "calf.png",
+	"frame": {"x":1000,"y":0,"w":1000,"h":3000},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":1000,"h":3000},
+	"sourceSize": {"w":1000,"h":3000}
+},
+{
+	"filename": "head.png",
+	"frame": {"x":2000,"y":0,"w":1000,"h":3000},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":1000,"h":3000},
+	"sourceSize": {"w":1000,"h":3000}
+},
+{
+	"filename": "thigh.png",
+	"frame": {"x":3000,"y":0,"w":1000,"h":3000},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":1000,"h":3000},
+	"sourceSize": {"w":1000,"h":3000}
+}],
+"meta": {
+	"app": "https://www.codeandweb.com/texturepacker",
+	"version": "1.0",
+	"image": "player_packed.png",
+	"format": "RGBA8888",
+	"size": {"w":4000,"h":3000},
+	"scale": "1",
+	"smartupdate": "$TexturePacker:SmartUpdate:fdecfb7589bb92f6f434e890ca905b04:60b39bb4efeef61c5d2c08c4ebf0e56f:99ba62eeacf1eed772131219ba95bb4f$"
+}
+}
