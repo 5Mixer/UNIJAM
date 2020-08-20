@@ -6,6 +6,7 @@ import kha.Color;
 import kha.Framebuffer;
 import kha.Scheduler;
 import kha.System;
+import entity.Player;
 
 class Main {
 	var player:Player;
@@ -13,6 +14,7 @@ class Main {
 	var layer:Layer;
 	var level:Level;
 	var camera:Camera;
+	var overlay:Overlay;
 
 	var playerTexture:rendering.RenderPass;
 	var playerMaskTexture:rendering.RenderPass;
@@ -40,6 +42,7 @@ class Main {
 		player = new Player(playerMaskTexture);
 		layer = new Layer();
 		level = new Level();
+		overlay = new Overlay();
 
 		playerTextureParticles = new ParticleSystem();
 
@@ -57,7 +60,7 @@ class Main {
 		});
 
 		// bindings
-		input.onJump = function() { player.attemptJump(); };
+		input.onJump = function() { player.attemptJump(); overlay.dark = !overlay.dark;};
 
 		Scheduler.addTimeTask(function () { update(); }, 0, 1 / 60);
 		System.notifyOnFrames(function (frames) { render(frames[0]); });
@@ -65,6 +68,7 @@ class Main {
 	function update(): Void {
 		player.update(input, level);
 		layer.update();
+		overlay.update();
 		playerTextureParticles.update();
 
 		camera.position.x = player.position.x - kha.Window.get(0).width/2;
@@ -82,6 +86,7 @@ class Main {
 		// player.render(g2);
 		playerMask.render(g2);
 		camera.reset(g2);
+		overlay.render(g2);
 		
 		/*g2.color = kha.Color.Blue;
 		g2.fillRect(0,0,1300,210);

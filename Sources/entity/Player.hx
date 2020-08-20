@@ -1,4 +1,4 @@
-package ;
+package entity;
 
 import rendering.RenderPass;
 import differ.shapes.Polygon;
@@ -10,8 +10,7 @@ import spriter.EntityInstance;
 import imagesheet.ImageSheet;
 using spriterkha.SpriterG2;
 
-class Player {
-    public var position:Vector2;
+class Player extends Entity {
     public var velocity:Vector2;
     var size:Vector2;
 
@@ -27,7 +26,9 @@ class Player {
     var entity:EntityInstance;
     var imageSheet:ImageSheet;
     var animation = "idle";
-    public function new(maskControlPass:rendering.RenderPass) {
+    override public function new(maskControlPass:rendering.RenderPass) {
+        super();
+        
         position = new Vector2(100, 100);
         velocity = new Vector2();
         size = new Vector2(40, 100);
@@ -38,7 +39,7 @@ class Player {
 		var spriter = Spriter.parseScml(kha.Assets.blobs.playerAnims_scml.toString());
         entity = spriter.createEntity("entity_000");
     }
-    public function update(input:Input, level:Level) {
+    override public function update(input:Input, level:Level) {
         entity.step(1/60);
 
         // Left/right change horizontal velocity
@@ -98,7 +99,7 @@ class Player {
             velocity.y = -jumpAcceleration;
         }
     }
-    public function render(g:kha.graphics2.Graphics) {
+    override public function render(g:kha.graphics2.Graphics) {
         // var debug = false;
         // if (debug)
         //     g.drawRect(position.x-size.x/2, position.y-size.y, size.x, size.y);
