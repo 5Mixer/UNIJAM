@@ -7,9 +7,9 @@ import kha.Scheduler;
 import kha.System;
 
 class Main {
-	var overlay:Overlay;
+	public static var overlay:Overlay;
 	var input:Input;
-	var state:State;
+	public static var state:State;
 	function new() {
 		System.start({title: "Unijam", width: 1024, height: 768}, function (_) {
 			Assets.loadEverything(onLoad);

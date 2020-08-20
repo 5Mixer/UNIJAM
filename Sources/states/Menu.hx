@@ -16,4 +16,14 @@ class Menu extends State {
         g.fontSize = 30;
         g.drawString("By Callum, Daniel, and Jordan.", 130, 280);
     }
+    override public function update(input:Input) {
+        if (input.leftMouseDown) {
+            Main.overlay.startTransition();
+            Main.overlay.callback = function() {
+                Main.overlay.callback = null;
+                Main.overlay.endTransition();
+                Main.state = new Play(input);
+            }
+        }
+    }
 }

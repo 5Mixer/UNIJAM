@@ -8,6 +8,8 @@ class Input {
     public var left = false;
     public var right = false;
     public var onJump:()->Void;
+    
+    public var leftMouseDown = false;
 
     public function new () {
         Keyboard.get().notify(keyDown, keyUp, null);
@@ -34,6 +36,12 @@ class Input {
     }
 
     function mouseMove(x, y, dx, dy) {}
-    function mouseDown(button, x, y) {}
-    function mouseUp(button, x, y) {}
+    function mouseDown(button, x, y) {
+        if (button == 0)
+            leftMouseDown = true;
+    }
+    function mouseUp(button, x, y) {
+        if (button == 0)
+            leftMouseDown = false;
+    }
 }

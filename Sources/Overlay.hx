@@ -7,6 +7,7 @@ class Overlay {
     public var dark = false;
     var opacity = 0.;
     var speed = 1/60;
+    public var callback:()->Void;
     public function new() {
 
     }
@@ -19,11 +20,16 @@ class Overlay {
     public function update() {
         if (dark && opacity < 1) {
             opacity = Math.min(1, opacity + speed);
+            if (opacity == 1 && callback != null) {
+                callback();
+            }
         }
         if (!dark && opacity > 0) {
             opacity = Math.max(0, opacity - speed);
+            if (opacity == 0 && callback != null) {
+                callback();
+            }
         }
-
     }
     public function render(g:kha.graphics2.Graphics) {
         g.color = Color.fromFloats(0,0,0,opacity);
