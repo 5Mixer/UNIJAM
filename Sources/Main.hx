@@ -19,7 +19,8 @@ class Main {
 		// create camera
 		input = new Input();
 		overlay = new Overlay();
-		state = new states.Play(input);
+		// state = new states.Play(input);
+		state = new states.Menu();
 
 		Scheduler.addTimeTask(function () { update(); }, 0, 1 / 60);
 		System.notifyOnFrames(function (frames) { render(frames[0]); });
