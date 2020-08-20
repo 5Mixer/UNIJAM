@@ -2,13 +2,16 @@ package states;
 
 import kha.graphics2.Graphics;
 import entity.Player;
+import entity.Bat;
 import effects.ParticleSystem;
 
 class Play extends State {
 	var player:Player;
 	var layer:Layer;
 	var level:Level;
-	var camera:Camera;
+    var camera:Camera;
+    
+    var bat:Bat;
 
 	var playerTexture:rendering.RenderPass;
 	var playerMaskTexture:rendering.RenderPass;
@@ -29,7 +32,9 @@ class Play extends State {
 
 		player = new Player(playerMaskTexture);
 		layer = new Layer();
-		level = new Level();
+        level = new Level();
+        
+        bat = new entity.Bat();
 
 		playerTextureParticles = new ParticleSystem();
 
@@ -51,8 +56,10 @@ class Play extends State {
     }
     override public function update(input:Input) {
 		player.update(input, level);
-		layer.update();
-		playerTextureParticles.update();
+        layer.update();
+        bat.update(input, level);
+        playerTextureParticles.update();
+        bat.targetPosition = player.position;
 
 		camera.position.x = player.position.x - kha.Window.get(0).width/2;
     }
@@ -66,7 +73,8 @@ class Play extends State {
 		level.render(g);
 		layer.render(g);
 		// player.render(g);
-		playerMask.render(g);
+        playerMask.render(g);
+        bat.render(g);
 		camera.reset(g);
 		
 		/*g.color = kha.Color.Blue;
