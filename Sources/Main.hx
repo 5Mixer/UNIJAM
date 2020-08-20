@@ -1,5 +1,6 @@
 package;
 
+import effects.ParticleSystem;
 import kha.Assets;
 import kha.Color;
 import kha.Framebuffer;
@@ -17,6 +18,8 @@ class Main {
 	var playerMaskTexture:rendering.RenderPass;
 	var playerMask:rendering.MaskPass;
 	var renderPasses:Array<rendering.RenderPass> = [];
+
+	var playerTextureParticles:effects.ParticleSystem;
 
 	function new() {
 		System.start({title: "Unijam", width: 1024, height: 768}, function (_) {
@@ -36,15 +39,18 @@ class Main {
 		layer = new Layer();
 		level = new Level();
 
+		playerTextureParticles = new ParticleSystem();
+
 		// connect the render pipeline for player masking
 		playerMask.mask = playerMaskTexture.passImage;
 		playerMask.image = playerTexture.passImage;
+
+		playerTexture.clearColour = kha.Color.fromFloats(0,0,0,0);
+		playerTexture.clear = false;
+		playerMaskTexture.clear = true;
+		playerMaskTexture.clearColour = kha.Color.fromFloats(1,1,1,0);
 		playerTexture.registerRenderer(function(pass) {
-			pass.passImage.g2.clear(kha.Color.Pink);
-		});
-		playerMaskTexture.registerRenderer(function(pass) {
-			// pass.passImage.g2.color = kha.Color.fromBytes(100,0,0,255);
-			// pass.passImage.g2.fillRect(0,0,500,1000);
+			playerTextureParticles.render(pass.passImage.g2);
 		});
 
 		// bindings
@@ -56,6 +62,7 @@ class Main {
 	function update(): Void {
 		player.update(input, level);
 		layer.update();
+		playerTextureParticles.update();
 
 		camera.position.x = player.position.x - kha.Window.get(0).width/2;
 	}

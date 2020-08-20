@@ -15,7 +15,7 @@ void main() {
     vec2 xy = (transform * vec3(gl_FragCoord.xy, 1)).xy;
 
     vec4 a = texture(textureSampler, vUV); 
-    vec4 b = vec4(0.0, 0.0, 0.0, 0.0);
+    vec4 b = vec4(1.0, 1.0, 1.0, 0.0);
     
     float control = texture(maskTextureSampler, vUV).r;
     float alpha = texture(maskTextureSampler, vUV).a;
@@ -25,5 +25,6 @@ void main() {
     // fragColor = vec4(colour.r, colour.g, colour.b, alpha);
 
     // by taking the minimum of inverse control and alpha, white and alpha both create transparency.
-    fragColor = vec4(colour.r, colour.g, colour.b, min(1.0-control, alpha));
+    // fragColor = vec4(colour.r, colour.g, colour.b, min(1.0-control, alpha));
+    fragColor = vec4(colour.r, colour.g, colour.b, alpha);
 }
