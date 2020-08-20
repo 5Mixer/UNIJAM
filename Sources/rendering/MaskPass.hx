@@ -37,8 +37,8 @@ class MaskPass extends RenderPass {
     var maskId:TextureUnit;
     var transformId:ConstantLocation;
 
-    override public function new() {
-        super();
+    override public function new(camera) {
+        super(camera);
         
         vertices = [
             -1., -1., 0., // 0: Top left

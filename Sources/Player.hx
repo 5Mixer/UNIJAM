@@ -99,9 +99,15 @@ class Player {
         }
     }
     public function render(g:kha.graphics2.Graphics) {
-        var debug = false;
-        if (debug)
-            g.drawRect(position.x-size.x/2, position.y-size.y, size.x, size.y);
+        // var debug = false;
+        // if (debug)
+        //     g.drawRect(position.x-size.x/2, position.y-size.y, size.x, size.y);
+
+        var facingRight = velocity.x > 0;
+        g.pushTransformation(g.transformation.multmat(kha.math.FastMatrix3.translation(position.x+(facingRight?-size.x/2:size.x/2),position.y)).multmat(kha.math.FastMatrix3.scale(.05 * (facingRight?1:-1),.05)));
+        g.color = kha.Color.White;
+        g.drawSpriter(imageSheet, entity, 0,0);
+        g.popTransformation();
     }
     public function renderMask(pass:RenderPass) {
         var g = pass.passImage.g2;

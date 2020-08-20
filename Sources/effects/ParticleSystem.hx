@@ -38,7 +38,7 @@ class Particle {
 
 class ParticleSystem {
     public var particles:Array<Particle> = [];
-    var count = 3000;
+    var count = 1000;
     public function new() {
         for (i in 0...count) {
             particles.push(new Particle());
