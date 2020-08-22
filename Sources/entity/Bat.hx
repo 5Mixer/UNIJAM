@@ -17,18 +17,22 @@ enum BatState {
 class Bat extends Entity {
     public var state:BatState = Idle;
     public var targetPosition:Vector2 = new Vector2();
-    var idleTargetPosition:Vector2 = new Vector2();
     var targetFollowSpeed = 5;
     var origin = new Vector2(260, 280);
+    var idlePosition = new Vector2(500,500);
     var targetOffset = new Vector2(0, 100);
     
     var entity:EntityInstance;
     var imageSheet:ImageSheet;
     
-    var life = 0;
+    var chargeTime = 0;
+    var player:Player;
     
-    override public function new(imageSheet:ImageSheet, spriter:Spriter) {
+    override public function new(player, imageSheet:ImageSheet, spriter:Spriter) {
         super();
+        this.player = player;
+        position = new Vector2(900,900);
+        idlePosition = new Vector2(900,900);
 
         entity = spriter.createEntity("enemy2");
         entity.play("fly");
@@ -38,17 +42,47 @@ class Bat extends Entity {
     
     override public function update(input:Input, level:Level) {
         entity.step(1/60);
-        life++;
         if (state == Idle) {
-            var angle = life/100*(Math.PI*2);
-            var radius = 200;
-            idleTargetPosition = targetPosition.add(new Vector2(Math.cos(angle)*radius, Math.sin(angle)*radius)).sub(targetOffset);
-            position = position.add(idleTargetPosition.sub(position).normalized().mult(targetFollowSpeed));
+            entity.speed = 1.5;
+            if (player.position.sub(position).length < 1200) {
+                chargeTime++;
+                if (chargeTime > 3*60) {
+                    chargeTime = 0;
+
+                    targetPosition.x = player.position.x;
+                    targetPosition.y = player.position.y;
+
+                    state = Charge;
+                }
+            }else{
+                chargeTime = 0;
+            }
+        }else if(state == Charge) {
+            var speed = Math.sqrt(targetPosition.sub(position).length) * .8;
+            position = position.add(targetPosition.sub(position).normalized().mult(speed));
+
+            if (player.position.sub(position).length > 200 && player.position.sub(position).length < 1000) {
+                targetPosition.x = player.position.x;
+                targetPosition.y = player.position.y;
+            }
+
+            entity.speed = 1.4;
+            if (targetPosition.sub(position).length < 10) {
+                state = Retreat;
+            }
+        }else if(state == Retreat) {
+            entity.speed = 2;
+            var speed = Math.sqrt(idlePosition.sub(position).length) * .8;
+            position = position.add(idlePosition.sub(position).normalized().mult(speed));
+            if (idlePosition.sub(position).length < 50) {
+                state = Idle;
+            }
+
         }
     }
     override public function render(g:Graphics) {
         var scale = .5;
-        var size = new Vector2(500,500);
+        var size = new Vector2(500*scale,500*scale);
         g.pushTransformation(g.transformation.multmat(kha.math.FastMatrix3.translation(position.x + (-size.x / 2), position.y-size.y))
         .multmat(kha.math.FastMatrix3.scale(scale, scale)));
         g.color = kha.Color.White;

@@ -22,7 +22,7 @@ class Player extends Entity {
 	var speed = 6;
 	var acceleration = 1.5;
 	var deceleration = .8;
-	var jumpAcceleration = 10;
+	var jumpAcceleration = 13;
 	var gravity = .8;
 
 	var entity:EntityInstance;

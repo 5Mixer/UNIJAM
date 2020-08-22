@@ -46,9 +46,9 @@ class Play extends State {
 		layer = new Layer(camera);
         level = new Level();
         
-        bat = new entity.Bat(imageSheet, spriter);
-        wolf = new entity.Wolf(imageSheet, spriter);
-        shielder = new entity.Shielder(imageSheet, spriter);
+        bat = new entity.Bat(player, imageSheet, spriter);
+        // wolf = new entity.Wolf(imageSheet, spriter);
+        // shielder = new entity.Shielder(imageSheet, spriter);
 
 		playerTextureParticles = new ParticleSystem();
 
@@ -71,11 +71,10 @@ class Play extends State {
     override public function update(input:Input) {
 		player.update(input, level);
 		layer.update();
-		wolf.update(input, level);
+		// wolf.update(input, level);
 		bat.update(input, level);
-		shielder.update(input, level);
+		// shielder.update(input, level);
         playerTextureParticles.update();
-        bat.targetPosition = player.position;
 
 		camera.position.x = Math.max(0, player.position.x - kha.Window.get(0).width/2);
     }
@@ -91,8 +90,8 @@ class Play extends State {
 		playerMask.render(g);
 		player.render(g);
 		bat.render(g);
-		wolf.render(g);
-		shielder.render(g);
+		// wolf.render(g);
+		// shielder.render(g);
 		camera.reset(g);
 		
 		/*g.color = kha.Color.Blue;
