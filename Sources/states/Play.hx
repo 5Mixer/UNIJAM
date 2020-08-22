@@ -5,6 +5,8 @@ import kha.math.FastMatrix3;
 import kha.graphics2.Graphics;
 import entity.Player;
 import entity.Bat;
+import entity.Shielder;
+import entity.Wolf;
 import effects.ParticleSystem;
 import spriter.Spriter;
 import imagesheet.ImageSheet;
@@ -18,6 +20,8 @@ class Play extends State {
     var camera:Camera;
     
 	var bat:Bat;
+	var wolf:Wolf;
+    var shielder:Shielder;
 	var angle = 0.0;
 
 	var playerTexture:rendering.RenderPass;
@@ -45,10 +49,12 @@ class Play extends State {
 		spriter = Spriter.parseScml(kha.Assets.blobs.animations_scml.toString());
 		
 		player = new Player(playerMaskTexture, imageSheet, spriter);
-		layer = new Layer();
+		layer = new Layer(camera);
         level = new Level();
         
         bat = new entity.Bat(imageSheet, spriter);
+        wolf = new entity.Wolf(imageSheet, spriter);
+        shielder = new entity.Shielder(imageSheet, spriter);
 
 		playerTextureParticles = new ParticleSystem();
 
@@ -75,14 +81,16 @@ class Play extends State {
 
     override public function update(input:Input) {
 		player.update(input, level);
-        layer.update();
+		layer.update();
+		wolf.update(input, level);
 		bat.update(input, level);
+		shielder.update(input, level);
         playerTextureParticles.update();
 		bat.targetPosition = player.position;
 		// not a good idea - assumes always tracks player
 
-		camera.position.x = player.position.x - kha.Window.get(0).width/2;
-	}
+		camera.position.x = Math.max(0, player.position.x - kha.Window.get(0).width/2);
+    }
     override public function prerender() {
 		for (pass in renderPasses) {
 			pass.pass();
@@ -93,7 +101,9 @@ class Play extends State {
 		layer.render(g);
 		playerMask.render(g);
 		player.render(g);
-        bat.render(g);
+		bat.render(g);
+		wolf.render(g);
+		shielder.render(g);
 		camera.reset(g);
 		
 		/*g.color = kha.Color.Blue;
