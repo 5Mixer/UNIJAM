@@ -87,7 +87,8 @@ class Play extends State {
 		// shielder.update(input, level);
         playerTextureParticles.update();
 
-		camera.position.x = Math.max(0, player.position.x - kha.Window.get(0).width/2);
+		camera.position.x = Math.max(0, Math.min(8000 - kha.Window.get(0).width, player.position.x - kha.Window.get(0).width/2));
+		camera.position.y = Math.max(0, Math.min(1800 - kha.Window.get(0).height, player.position.y - kha.Window.get(0).height/2));
     }
     override public function prerender() {
 		for (pass in renderPasses) {

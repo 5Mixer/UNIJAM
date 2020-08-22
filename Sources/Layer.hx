@@ -11,7 +11,7 @@ class Layer {
     public function update() {}
 
     public function render(g:Graphics) {
-        g.drawImage(kha.Assets.images.level1bg, camera.position.x*.05, 0);
+        g.drawImage(kha.Assets.images.level1bg, camera.position.x*.05, camera.position.y*.05);
         g.drawImage(kha.Assets.images.level1fg, 0, 0);
     }
 }
