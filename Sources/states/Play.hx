@@ -4,6 +4,8 @@ import kha.graphics2.Graphics;
 import entity.Player;
 import entity.Bat;
 import effects.ParticleSystem;
+import spriter.Spriter;
+import imagesheet.ImageSheet;
 
 class Play extends State {
 	var player:Player;
@@ -20,6 +22,9 @@ class Play extends State {
 
 	var playerTextureParticles:effects.ParticleSystem;
 
+	var imageSheet:ImageSheet;
+	var spriter:Spriter;
+
     override public function new(input) {
         super();
         
@@ -30,11 +35,14 @@ class Play extends State {
 		renderPasses.push(playerMaskTexture = new rendering.RenderPass(camera));
 		renderPasses.push(playerMask = new rendering.MaskPass(camera));
 
-		player = new Player(playerMaskTexture);
+		imageSheet = ImageSheet.fromTexturePackerJsonArray(kha.Assets.blobs.texture_packing_json.toString());
+		spriter = Spriter.parseScml(kha.Assets.blobs.animations_scml.toString());
+		
+		player = new Player(playerMaskTexture, imageSheet, spriter);
 		layer = new Layer();
         level = new Level();
         
-        bat = new entity.Bat();
+        bat = new entity.Bat(imageSheet, spriter);
 
 		playerTextureParticles = new ParticleSystem();
 

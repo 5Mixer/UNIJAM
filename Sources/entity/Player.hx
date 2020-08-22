@@ -32,18 +32,16 @@ class Player extends Entity {
 
     var facingRight = true;
 
-	override public function new(maskControlPass:rendering.RenderPass) {
+	override public function new(maskControlPass:rendering.RenderPass, imageSheet:ImageSheet, spriter:Spriter) {
 		super();
 
 		position = new Vector2(100, 100);
 		velocity = new Vector2();
-		size = new Vector2(250*scale, 480*scale);
-
+        size = new Vector2(250*scale, 480*scale);
+        
 		maskControlPass.registerRenderer(renderMask);
-
-		imageSheet = ImageSheet.fromTexturePackerJsonArray(kha.Assets.blobs.texture_packing_json.toString());
-		var spriter = Spriter.parseScml(kha.Assets.blobs.animations_scml.toString());
         entity = spriter.createEntity("player");
+        this.imageSheet = imageSheet;
         entity.speed = .5;
 	}
 
