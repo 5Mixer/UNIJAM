@@ -1,9 +1,13 @@
 package states;
 
+import kha.math.Vector2;
+import kha.math.FastMatrix3;
 import kha.graphics2.Graphics;
 import entity.Player;
 import entity.Bat;
 import effects.ParticleSystem;
+
+import kha.Assets;
 
 class Play extends State {
 	var player:Player;
@@ -11,7 +15,8 @@ class Play extends State {
 	var level:Level;
     var camera:Camera;
     
-    var bat:Bat;
+	var bat:Bat;
+	var angle = 0.0;
 
 	var playerTexture:rendering.RenderPass;
 	var playerMaskTexture:rendering.RenderPass;
@@ -22,8 +27,9 @@ class Play extends State {
 
     override public function new(input) {
         super();
-        
-        camera = new Camera();
+		
+		camera = new Camera();
+		input.camera = camera;
 
 		// register render passes
 		renderPasses.push(playerTexture = new rendering.RenderPass(camera));
@@ -34,7 +40,7 @@ class Play extends State {
 		layer = new Layer();
         level = new Level();
         
-        bat = new entity.Bat();
+		bat = new entity.Bat();
 
 		playerTextureParticles = new ParticleSystem();
 
@@ -52,17 +58,22 @@ class Play extends State {
 		});
 
 		// bindings
-        input.onJump = function() { player.attemptJump(); }
-    }
+		input.onJump = function() { player.attemptJump(); }
+		input.onSoulSummon = function(type: String) { 
+			player.changeSoulTo(type); 
+		}
+	}
+
     override public function update(input:Input) {
 		player.update(input, level);
         layer.update();
-        bat.update(input, level);
+		bat.update(input, level);
         playerTextureParticles.update();
-        bat.targetPosition = player.position;
+		bat.targetPosition = player.position;
+		// not a good idea - assumes always tracks player
 
 		camera.position.x = player.position.x - kha.Window.get(0).width/2;
-    }
+	}
     override public function prerender() {
 		for (pass in renderPasses) {
 			pass.pass();
@@ -72,9 +83,35 @@ class Play extends State {
 		camera.transform(g);
 		level.render(g);
 		layer.render(g);
-		// player.render(g);
+		player.render(g);
         playerMask.render(g);
-        bat.render(g);
+		bat.render(g);
+
+		// draw a spinning axe
+		angle = angle + Math.PI / (2 * 30);
+		// g.drawScaledImage(Assets.images.axe, 300, 600, 60, 60);
+		var image = Assets.images.axe;
+		var x = 300;
+		var y = 450;
+		var originX = 30;
+		var originY = 30;
+		var width = 60;
+		var height = 60;
+
+		// Draw references
+		g.color = kha.Color.Blue;
+		g.drawScaledImage(
+			image,
+			x,y,
+			width, height);
+		
+		// g.drawScaledSubImage(image, sx, sy, sw, sh, dx, dy, dw, dh);
+		sketch_rotating(g, image, angle, 
+			new Vector2(x, y), 
+			new Vector2(originX, originY), 
+			new Vector2(width, height)
+		);
+
 		camera.reset(g);
 		
 		/*g.color = kha.Color.Blue;
@@ -83,5 +120,20 @@ class Play extends State {
 		for (i in 0...renderPasses.length) {
 			g.drawScaledImage(renderPasses[i].passImage,400*i,0,390,200);
 		}*/
-    }
+	}
+
+	function sketch_rotating(g:Graphics, image, angle, point: Vector2, origin: Vector2, size: Vector2) {
+		g.pushTransformation(
+			g.transformation.multmat(
+				FastMatrix3.translation(point.x + origin.x, point.y + origin.y)
+			).multmat(FastMatrix3.rotation(angle)).multmat(
+				FastMatrix3.translation(-point.x - origin.x, -point.y - origin.y)
+			)
+		);
+		g.drawScaledImage(
+			image,
+			point.x, point.y,
+			size.x, size.y);
+		g.popTransformation();
+	}
 }

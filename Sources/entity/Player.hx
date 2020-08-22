@@ -1,5 +1,6 @@
 package entity;
 
+import haxe.display.Display.Package;
 import rendering.RenderPass;
 import differ.shapes.Polygon;
 import differ.shapes.Shape;
@@ -8,6 +9,8 @@ import kha.math.Vector2;
 import spriter.Spriter;
 import spriter.EntityInstance;
 import imagesheet.ImageSheet;
+import entity.soul.Soul;
+
 using spriterkha.SpriterG2;
 
 class Player extends Entity {
@@ -26,13 +29,17 @@ class Player extends Entity {
     var entity:EntityInstance;
     var imageSheet:ImageSheet;
     var animation = "idle";
+    public var soul: Soul = null;
+    public var soulSelection = "";
+    public var chestOffset = new Vector2(-50, -100); // offset from player position to get chest
+
     override public function new(maskControlPass:rendering.RenderPass) {
         super();
         
         position = new Vector2(100, 100);
         velocity = new Vector2();
         size = new Vector2(40, 100);
-
+        
         maskControlPass.registerRenderer(renderMask);
 
 		imageSheet = ImageSheet.fromTexturePackerJsonArray(kha.Assets.blobs.player_packing_json.toString());
@@ -77,6 +84,18 @@ class Player extends Entity {
             entity.transition("run",.1);
             animation = "run";
         }
+
+        // Soul spawn/updating
+        if (soul == null && soulSelection != "" && input.leftMouseDown) {
+            // spawn
+            spawnSoul(input, level);
+        }
+        if (soul != null && !soul.isActive()) {
+            soul = null;
+        }
+		if (soul != null) {
+			soul.update(input, level);
+		}
     }
     function resolveCollisions(geometry:Array<differ.shapes.Shape>) {
         var collides = false;
@@ -104,11 +123,12 @@ class Player extends Entity {
         // if (debug)
         //     g.drawRect(position.x-size.x/2, position.y-size.y, size.x, size.y);
 
-        var facingRight = velocity.x > 0;
+        /* var facingRight = velocity.x > 0;
         g.pushTransformation(g.transformation.multmat(kha.math.FastMatrix3.translation(position.x+(facingRight?-size.x/2:size.x/2),position.y)).multmat(kha.math.FastMatrix3.scale(.05 * (facingRight?1:-1),.05)));
         g.color = kha.Color.White;
         g.drawSpriter(imageSheet, entity, 0,0);
-        g.popTransformation();
+        g.popTransformation(); */
+        if (soul != null) soul.render(g);
     }
     public function renderMask(pass:RenderPass) {
         var g = pass.passImage.g2;
@@ -119,4 +139,36 @@ class Player extends Entity {
         g.drawSpriter(imageSheet, entity, 0,0);
         g.popTransformation();
     }
+
+
+    public function changeSoulTo(selection: String) {
+        trace('Transitioning to $selection');
+        this.soulSelection = selection;
+    }
+    
+    public function spawnSoul(input: Input, level: Level) {
+        if (soul != null) {
+            soul.deactivate();
+            soul = null;
+        }
+        if (soulSelection == "dagger") {
+			soul = new entity.soul.Dagger(
+                this.position.add(chestOffset)
+            );
+            soul.thrower = this;
+            soul.targetPosition = input.getMousePosition();
+		} else if (soulSelection == "axe") {
+			soul = new entity.soul.Axe(
+                this.position.add(chestOffset),
+                input.getMousePosition().sub(this.position.add(chestOffset))
+            );
+            soul.thrower = this;
+		}
+    }
+
+    public function despawnSoul() {
+        soul.thrower = null;
+        soul = null;
+    }
+
 }
