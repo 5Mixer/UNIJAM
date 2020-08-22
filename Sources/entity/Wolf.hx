@@ -8,17 +8,17 @@ import spriter.EntityInstance;
 import imagesheet.ImageSheet;
 using spriterkha.SpriterG2;
 
-enum ShielderState {
+enum WolfState {
     Idle;
-    Shield;
     Charge;
+    Retreat;
 }
 
-class Shielder extends Entity {
-    public var state:ShielderState = Idle;
+class Wolf extends Entity {
+    public var state:WolfState = Idle;
     public var targetPosition:Vector2 = new Vector2();
     var targetFollowSpeed = 5;
-    var origin = new Vector2(260, 280);
+    var origin = new Vector2(250, 250);
     
     var entity:EntityInstance;
     var imageSheet:ImageSheet;
@@ -29,8 +29,9 @@ class Shielder extends Entity {
         super();
         position = new Vector2(500,800);
 
-        entity = spriter.createEntity("enemy3");
-        entity.play("idle");
+        entity = spriter.createEntity("enemy1");
+        entity.play("run");
+        entity.speed = 1.6;
         this.imageSheet = imageSheet;
     }
     
@@ -45,7 +46,6 @@ class Shielder extends Entity {
         .multmat(kha.math.FastMatrix3.scale(scale, scale)));
         g.color = kha.Color.White;
         g.drawSpriter(imageSheet, entity, 0, 0);
-        
         g.popTransformation();
     }
 }

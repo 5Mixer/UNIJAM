@@ -114,14 +114,6 @@ class Player extends Entity {
 		// var debug = false;
 		// if (debug)
 
-        // g.drawRect(position.x-size.x/2, position.y-size.y, size.x, size.y/4);
-		// var facingRight = velocity.x > 0;
-		// g.pushTransformation(g.transformation.multmat(kha.math.FastMatrix3.translation(position.x + (facingRight ? -size.x / 2 : size.x / 2), position.y))
-		// 	.multmat(kha.math.FastMatrix3.scale(.5 * (facingRight ? 1 : -1), .5)));
-		// g.color = kha.Color.White;
-		// g.drawSpriter(imageSheet, entity, 0, 0);
-		// g.popTransformation();
-        
         g.pushTransformation(g.transformation.multmat(kha.math.FastMatrix3.translation(position.x + (facingRight ? -size.x / 2 : size.x / 2), position.y-size.y))
 			.multmat(kha.math.FastMatrix3.scale(scale * (facingRight ? 1 : -1), scale)));
 		g.color = kha.Color.White;
@@ -133,9 +125,10 @@ class Player extends Entity {
 	public function renderMask(pass:RenderPass) {
 		var g = pass.passImage.g2;
 
+        // g.fillRect(position.x - size.x/2, position.y - size.y, size.x, size.y);
 		g.pushTransformation(g.transformation.multmat(kha.math.FastMatrix3.translation(position.x + (facingRight ? -size.x / 2 : size.x / 2), position.y-size.y))
 			.multmat(kha.math.FastMatrix3.scale(scale * (facingRight ? 1 : -1), scale)));
-		g.color = kha.Color.White;
+        g.color = kha.Color.White;
 		g.drawSpriter(imageSheet, entity, 0, 0);
 
         g.popTransformation();
