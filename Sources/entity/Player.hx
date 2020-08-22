@@ -7,6 +7,7 @@ import kha.math.Vector2;
 import spriter.Spriter;
 import spriter.EntityInstance;
 import imagesheet.ImageSheet;
+import entity.soul.Soul;
 
 using spriterkha.SpriterG2;
 
@@ -28,6 +29,11 @@ class Player extends Entity {
 	var entity:EntityInstance;
 	var imageSheet:ImageSheet;
     var animation = "idle";
+
+    public var soul: Soul = null;
+    public var soulSelection = "";
+    public var chestOffset = new Vector2(-50, -100); // offset from player position to get chest
+    
     var scale = .25;
 
     var facingRight = true;
@@ -81,11 +87,22 @@ class Player extends Entity {
 		if (Math.abs(velocity.x) < 2 && animation != "idle") {
 			entity.transition("idle", .1);
             animation = "idle";
-		} else if (Math.abs(velocity.x) > 2 && animation != "run") {
-			entity.transition("run", .1);
-			animation = "run";
-		}
-	}
+        } else if (Math.abs(velocity.x) > 2 && animation != "run") {
+            entity.transition("run", .1);
+            animation = "run";
+        }
+        // Soul spawn/updating
+        if (soul == null && soulSelection != "" && input.leftMouseDown) {
+            // spawn
+            spawnSoul(input, level);
+        }
+        if (soul != null && !soul.isActive()) {
+            soul = null;
+        }
+        if (soul != null) {
+            soul.update(input, level);
+        }
+    }
 
 	function resolveCollisions(geometry:Array<differ.shapes.Shape>) {
 		var collides = false;
@@ -120,6 +137,7 @@ class Player extends Entity {
         // g.drawRect(0, 0, size.x, size.y);
 
         g.popTransformation();
+        if (soul != null) soul.render(g);
 	}
 
 	public function renderMask(pass:RenderPass) {
@@ -133,5 +151,29 @@ class Player extends Entity {
 
         g.popTransformation();
 
-	}
+    }
+    
+    public function changeSoulTo(selection: String) {
+        this.soulSelection = selection;
+    }
+    
+    public function spawnSoul(input: Input, level: Level) {
+        if (soul != null) {
+            soul.deactivate();
+            soul = null;
+        }
+        if (soulSelection == "dagger") {
+			soul = new entity.soul.Dagger(
+                this.position.add(chestOffset)
+            );
+            soul.thrower = this;
+            soul.targetPosition = input.getMousePosition();
+		} else if (soulSelection == "axe") {
+			soul = new entity.soul.Axe(
+                this.position.add(chestOffset),
+                input.getMousePosition().sub(this.position.add(chestOffset))
+            );
+            soul.thrower = this;
+		}
+    }
 }

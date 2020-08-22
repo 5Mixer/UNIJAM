@@ -1,5 +1,7 @@
 package states;
 
+import kha.math.Vector2;
+import kha.math.FastMatrix3;
 import kha.graphics2.Graphics;
 import entity.Player;
 import entity.Bat;
@@ -9,15 +11,18 @@ import effects.ParticleSystem;
 import spriter.Spriter;
 import imagesheet.ImageSheet;
 
+import kha.Assets;
+
 class Play extends State {
 	var player:Player;
 	var layer:Layer;
 	var level:Level;
     var camera:Camera;
     
-    var bat:Bat;
-    var wolf:Wolf;
+	var bat:Bat;
+	var wolf:Wolf;
     var shielder:Shielder;
+	var angle = 0.0;
 
 	var playerTexture:rendering.RenderPass;
 	var playerMaskTexture:rendering.RenderPass;
@@ -31,8 +36,9 @@ class Play extends State {
 
     override public function new(input) {
         super();
-        
-        camera = new Camera();
+		
+		camera = new Camera();
+		input.camera = camera;
 
 		// register render passes
 		renderPasses.push(playerTexture = new rendering.RenderPass(camera));
@@ -66,8 +72,13 @@ class Play extends State {
 		});
 
 		// bindings
-        input.onJump = function() { player.attemptJump(); }
-    }
+		input.onJump = function() { player.attemptJump(); }
+		input.onSoulSummon = function(type: String) { 
+			player.changeSoulTo(type); 
+		}
+		input.onDespawn = function() {player.soul.deactivate();}
+	}
+
     override public function update(input:Input) {
 		player.update(input, level);
 		layer.update();
@@ -86,7 +97,6 @@ class Play extends State {
     override public function render(g:Graphics) {
 		camera.transform(g);
 		layer.render(g);
-		// level.render(g);
 		playerMask.render(g);
 		player.render(g);
 		bat.render(g);
@@ -100,5 +110,20 @@ class Play extends State {
 		for (i in 0...renderPasses.length) {
 			g.drawScaledImage(renderPasses[i].passImage,400*i,0,390,200);
 		}*/
-    }
+	}
+
+	function sketch_rotating(g:Graphics, image, angle, point: Vector2, origin: Vector2, size: Vector2) {
+		g.pushTransformation(
+			g.transformation.multmat(
+				FastMatrix3.translation(point.x + origin.x, point.y + origin.y)
+			).multmat(FastMatrix3.rotation(angle)).multmat(
+				FastMatrix3.translation(-point.x - origin.x, -point.y - origin.y)
+			)
+		);
+		g.drawScaledImage(
+			image,
+			point.x, point.y,
+			size.x, size.y);
+		g.popTransformation();
+	}
 }
