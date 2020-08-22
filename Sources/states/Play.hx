@@ -72,7 +72,6 @@ class Play extends State {
 		camera.transform(g);
 		level.render(g);
 		layer.render(g);
-		// player.render(g);
         playerMask.render(g);
         bat.render(g);
 		camera.reset(g);

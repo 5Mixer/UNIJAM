@@ -34,6 +34,6 @@ class Bat extends Entity {
         }
     }
     override public function render(g:Graphics) {
-        g.drawImage(Assets.images.bat, position.x-origin.x, position.y-origin.y);
+        // g.drawImage(Assets.images.bat, position.x-origin.x, position.y-origin.y);
     }
 }
