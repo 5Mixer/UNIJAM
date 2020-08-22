@@ -70,9 +70,10 @@ class Play extends State {
     }
     override public function render(g:Graphics) {
 		camera.transform(g);
-		level.render(g);
 		layer.render(g);
-        playerMask.render(g);
+		// level.render(g);
+		playerMask.render(g);
+		player.render(g);
         bat.render(g);
 		camera.reset(g);
 		

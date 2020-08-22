@@ -27,14 +27,15 @@ class Player extends Entity {
 
 	var entity:EntityInstance;
 	var imageSheet:ImageSheet;
-	var animation = "idle";
+    var animation = "idle";
+    var scale = .25;
 
 	override public function new(maskControlPass:rendering.RenderPass) {
 		super();
 
 		position = new Vector2(100, 100);
 		velocity = new Vector2();
-		size = new Vector2(250, 500);
+		size = new Vector2(250*scale, 480*scale);
 
 		maskControlPass.registerRenderer(renderMask);
 
@@ -87,7 +88,7 @@ class Player extends Entity {
 	function resolveCollisions(geometry:Array<differ.shapes.Shape>) {
 		var collides = false;
 		for (shape in geometry) {
-			var potentialCollision = shape.testPolygon(Polygon.rectangle(position.x - (size.x / 2) + velocity.x, position.y - size.y + velocity.y, 40, 100,
+			var potentialCollision = shape.testPolygon(Polygon.rectangle(position.x - (size.x * .5) + velocity.x, position.y - (size.y) + velocity.y, size.x, size.y,
 				false));
 			if (potentialCollision != null) {
 				collides = true;
@@ -110,14 +111,22 @@ class Player extends Entity {
 	override public function render(g:kha.graphics2.Graphics) {
 		// var debug = false;
 		// if (debug)
-		//     g.drawRect(position.x-size.x/2, position.y-size.y, size.x, size.y);
 
+        // g.drawRect(position.x-size.x/2, position.y-size.y, size.x, size.y/4);
+		// var facingRight = velocity.x > 0;
+		// g.pushTransformation(g.transformation.multmat(kha.math.FastMatrix3.translation(position.x + (facingRight ? -size.x / 2 : size.x / 2), position.y))
+		// 	.multmat(kha.math.FastMatrix3.scale(.5 * (facingRight ? 1 : -1), .5)));
+		// g.color = kha.Color.White;
+		// g.drawSpriter(imageSheet, entity, 0, 0);
+		// g.popTransformation();
+        
 		var facingRight = velocity.x > 0;
-		g.pushTransformation(g.transformation.multmat(kha.math.FastMatrix3.translation(position.x + (facingRight ? -size.x / 2 : size.x / 2), position.y))
-			.multmat(kha.math.FastMatrix3.scale(.5 * (facingRight ? 1 : -1), .5)));
+        g.pushTransformation(g.transformation.multmat(kha.math.FastMatrix3.translation(position.x + (facingRight ? -size.x / 2 : size.x / 2), position.y-size.y))
+			.multmat(kha.math.FastMatrix3.scale(scale * (facingRight ? 1 : -1), scale)));
 		g.color = kha.Color.White;
-		g.drawSpriter(imageSheet, entity, 0, 0);
-		g.popTransformation();
+        // g.drawRect(0, 0, size.x, size.y);
+
+        g.popTransformation();
 	}
 
 	public function renderMask(pass:RenderPass) {
@@ -125,7 +134,7 @@ class Player extends Entity {
 
 		var facingRight = velocity.x > 0;
 		g.pushTransformation(g.transformation.multmat(kha.math.FastMatrix3.translation(position.x + (facingRight ? -size.x / 2 : size.x / 2), position.y-size.y))
-			.multmat(kha.math.FastMatrix3.scale(.5 * (facingRight ? 1 : -1), .5)));
+			.multmat(kha.math.FastMatrix3.scale(scale * (facingRight ? 1 : -1), scale)));
 		g.color = kha.Color.White;
 		g.drawSpriter(imageSheet, entity, 0, 0);
 

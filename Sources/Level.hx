@@ -19,6 +19,6 @@ class Level {
     }
     public function render(g:kha.graphics2.Graphics) {
         // Debug rendering of triangulated collisions
-        // tiled.entities[0].render(g);
+        tiled.entities[0].render(g);
     }
 }
