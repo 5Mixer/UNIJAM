@@ -32,6 +32,7 @@ class Bat extends Entity {
 
         entity = spriter.createEntity("enemy2");
         entity.play("fly");
+        entity.speed = 1.6;
         this.imageSheet = imageSheet;
     }
     
@@ -46,7 +47,7 @@ class Bat extends Entity {
         }
     }
     override public function render(g:Graphics) {
-        var scale = 1;
+        var scale = .5;
         var size = new Vector2(500,500);
         g.pushTransformation(g.transformation.multmat(kha.math.FastMatrix3.translation(position.x + (-size.x / 2), position.y-size.y))
         .multmat(kha.math.FastMatrix3.scale(scale, scale)));

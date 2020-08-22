@@ -39,7 +39,7 @@ class Play extends State {
 		spriter = Spriter.parseScml(kha.Assets.blobs.animations_scml.toString());
 		
 		player = new Player(playerMaskTexture, imageSheet, spriter);
-		layer = new Layer();
+		layer = new Layer(camera);
         level = new Level();
         
         bat = new entity.Bat(imageSheet, spriter);
