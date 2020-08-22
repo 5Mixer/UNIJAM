@@ -30,6 +30,8 @@ class Player extends Entity {
     var animation = "idle";
     var scale = .25;
 
+    var facingRight = true;
+
 	override public function new(maskControlPass:rendering.RenderPass) {
 		super();
 
@@ -46,14 +48,16 @@ class Player extends Entity {
 	}
 
 	override public function update(input:Input, level:Level) {
-		entity.step(1 / 60);
+		entity.step(1/60);
 
 		// Left/right change horizontal velocity
 		if (input.left) {
 			velocity = velocity.add(new Vector2(-acceleration, 0));
+            facingRight = false;
 		}
 		if (input.right) {
-			velocity = velocity.add(new Vector2(acceleration, 0));
+            velocity = velocity.add(new Vector2(acceleration, 0));
+            facingRight = true;
 		}
 
 		// Decelerate on no input
@@ -78,7 +82,7 @@ class Player extends Entity {
 
 		if (Math.abs(velocity.x) < 2 && animation != "idle") {
 			entity.transition("idle", .1);
-			animation = "idle";
+            animation = "idle";
 		} else if (Math.abs(velocity.x) > 2 && animation != "run") {
 			entity.transition("run", .1);
 			animation = "run";
@@ -120,7 +124,6 @@ class Player extends Entity {
 		// g.drawSpriter(imageSheet, entity, 0, 0);
 		// g.popTransformation();
         
-		var facingRight = velocity.x > 0;
         g.pushTransformation(g.transformation.multmat(kha.math.FastMatrix3.translation(position.x + (facingRight ? -size.x / 2 : size.x / 2), position.y-size.y))
 			.multmat(kha.math.FastMatrix3.scale(scale * (facingRight ? 1 : -1), scale)));
 		g.color = kha.Color.White;
@@ -132,7 +135,6 @@ class Player extends Entity {
 	public function renderMask(pass:RenderPass) {
 		var g = pass.passImage.g2;
 
-		var facingRight = velocity.x > 0;
 		g.pushTransformation(g.transformation.multmat(kha.math.FastMatrix3.translation(position.x + (facingRight ? -size.x / 2 : size.x / 2), position.y-size.y))
 			.multmat(kha.math.FastMatrix3.scale(scale * (facingRight ? 1 : -1), scale)));
 		g.color = kha.Color.White;
