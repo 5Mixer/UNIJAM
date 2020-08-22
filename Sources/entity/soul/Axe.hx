@@ -19,6 +19,7 @@ class Axe extends Soul {
     var throwDampening = 0.995;
     var retractSpeed = 40;
 
+    // Prevent instant recall of axe with minor time lag to button listen
     var t = 0;
 
     // 50% ratio
@@ -41,7 +42,6 @@ class Axe extends Soul {
     }
 
     function transitionTo(newState: AxeState) {
-        trace('Axe transitioning to $newState');
         state = newState;
     }
 
@@ -55,7 +55,6 @@ class Axe extends Soul {
             if (position.sub(targetPosition).length < 50) {
                 // FLAG FOR DESPAWN
                 deactivate();
-                thrower.despawnSoul();
             }
         } 
         if (state != Retract && t > 20 && input.leftMouseDown) {
@@ -76,8 +75,8 @@ class Axe extends Soul {
     }
 
     override public function deactivate() {
-        trace("Scheduled to despawn axe");
         state = Inactive;
+        trace("Axe will die");
     }
 
     function freefall() {

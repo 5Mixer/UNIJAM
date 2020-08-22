@@ -32,13 +32,13 @@ class Particle {
         var b = .5 + .5 * (age/deathAge);
         g.color = kha.Color.fromFloats(b*245/255,b*66/255,b*105/255);
         // g.color = kha.Color.fromFloats(b,b,b);
-        g.fillCircle(position.x, position.y, 12 - 4*(age/deathAge));
+        g.fillCircle(position.x, position.y, 32 - 21*(age/deathAge));
     }
 }
 
 class ParticleSystem {
     public var particles:Array<Particle> = [];
-    var count = 1000;
+    var count = 100;
     public function new() {
         for (i in 0...count) {
             particles.push(new Particle());

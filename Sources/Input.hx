@@ -11,6 +11,7 @@ class Input {
     public var right = false;
     public var onSoulSummon:(type: String)->Void;
     public var onJump:()->Void;
+    public var onDespawn:()->Void;
     
     public var leftMouseDown = false;
     public var mousePosition: Vector2 = null;
@@ -35,6 +36,10 @@ class Input {
         }
         if (key == KeyCode.Two && onSoulSummon != null) {
             onSoulSummon("axe");
+        }
+        // debug stupid weapon disappearances
+        if (key == KeyCode.Zero && onDespawn != null) {
+            onDespawn();
         }
     }
     function keyUp(key:KeyCode) {

@@ -6,6 +6,8 @@ import kha.graphics2.Graphics;
 import entity.Player;
 import entity.Bat;
 import effects.ParticleSystem;
+import spriter.Spriter;
+import imagesheet.ImageSheet;
 
 import kha.Assets;
 
@@ -25,6 +27,9 @@ class Play extends State {
 
 	var playerTextureParticles:effects.ParticleSystem;
 
+	var imageSheet:ImageSheet;
+	var spriter:Spriter;
+
     override public function new(input) {
         super();
 		
@@ -36,11 +41,14 @@ class Play extends State {
 		renderPasses.push(playerMaskTexture = new rendering.RenderPass(camera));
 		renderPasses.push(playerMask = new rendering.MaskPass(camera));
 
-		player = new Player(playerMaskTexture);
+		imageSheet = ImageSheet.fromTexturePackerJsonArray(kha.Assets.blobs.texture_packing_json.toString());
+		spriter = Spriter.parseScml(kha.Assets.blobs.animations_scml.toString());
+		
+		player = new Player(playerMaskTexture, imageSheet, spriter);
 		layer = new Layer();
         level = new Level();
         
-		bat = new entity.Bat();
+        bat = new entity.Bat(imageSheet, spriter);
 
 		playerTextureParticles = new ParticleSystem();
 
@@ -62,6 +70,7 @@ class Play extends State {
 		input.onSoulSummon = function(type: String) { 
 			player.changeSoulTo(type); 
 		}
+		input.onDespawn = function() {player.soul.deactivate();}
 	}
 
     override public function update(input:Input) {
@@ -81,37 +90,10 @@ class Play extends State {
     }
     override public function render(g:Graphics) {
 		camera.transform(g);
-		level.render(g);
 		layer.render(g);
+		playerMask.render(g);
 		player.render(g);
-        playerMask.render(g);
-		bat.render(g);
-
-		// draw a spinning axe
-		angle = angle + Math.PI / (2 * 30);
-		// g.drawScaledImage(Assets.images.axe, 300, 600, 60, 60);
-		var image = Assets.images.axe;
-		var x = 300;
-		var y = 450;
-		var originX = 30;
-		var originY = 30;
-		var width = 60;
-		var height = 60;
-
-		// Draw references
-		g.color = kha.Color.Blue;
-		g.drawScaledImage(
-			image,
-			x,y,
-			width, height);
-		
-		// g.drawScaledSubImage(image, sx, sy, sw, sh, dx, dy, dw, dh);
-		sketch_rotating(g, image, angle, 
-			new Vector2(x, y), 
-			new Vector2(originX, originY), 
-			new Vector2(width, height)
-		);
-
+        bat.render(g);
 		camera.reset(g);
 		
 		/*g.color = kha.Color.Blue;

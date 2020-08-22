@@ -10,7 +10,7 @@ class Camera {
 	public var scale:Float;
 
 	public function new () {
-		position = new Vector2();
+		position = new Vector2(0,700);
 		scale = 1;
 	}
 	public function zoomOn(screenPoint:Vector2, amount:Float) {

@@ -31,7 +31,6 @@ class Dagger extends Soul {
     }
 
     function transitionTo(newState: DaggerState, newTarget: Vector2) {
-        trace('Dagger transitioning to $newState');
         state = newState;
         targetPosition = newTarget;
     }
@@ -67,16 +66,14 @@ class Dagger extends Soul {
     }
 
     override public function deactivate() {
-        trace("Scheduled to despawn dagger");
+        trace("Dagger will die");
         state = Inactive;
     }
 
     function shootToTarget() {
         // calibrate angle
         var direction = targetPosition.sub(position).normalized();
-        var unitUp = new Vector2(0, -1);
         angle = Math.atan2(direction.x, -direction.y);
-        trace(angle * 180 / Math.PI);
         position = position.add(direction.mult(baseSpeed));    
     }
 
@@ -90,7 +87,6 @@ class Dagger extends Soul {
     }
 
     function renderRotation(g: Graphics) {
-        var point = position.sub(centerRotationOffset);
         var translation = position.add(centerRotationOffset);
         g.pushTransformation(
 			g.transformation.multmat(
@@ -99,10 +95,7 @@ class Dagger extends Soul {
 				FastMatrix3.translation(-translation.x, -translation.y)
 			)
 		);
-		g.drawScaledImage(
-			Assets.images.dagger3,
-			point.x, point.y,
-			scaledSize.x, scaledSize.y);
+		g.drawScaledImage(Assets.images.dagger3, position.x, position.y, scaledSize.x, scaledSize.y);
 		g.popTransformation();
     }
 }
