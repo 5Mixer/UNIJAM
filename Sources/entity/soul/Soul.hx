@@ -7,6 +7,7 @@ class Soul extends Entity {
     public var targetPosition:Vector2 = new Vector2();
     public var thrower: Player;
     var mousePosition: Vector2;
+    public var isColliding = false;
 
     public function new(position: Vector2) {
         super();

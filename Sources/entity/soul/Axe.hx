@@ -123,7 +123,8 @@ class Axe extends Soul {
 				velocity.x -= potentialCollision.separationX;
 				velocity.y -= potentialCollision.separationY;
 			}
-		}
+        }
+        isColliding = collides;
 		return collides;
     }
     
