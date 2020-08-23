@@ -20,6 +20,7 @@ class Axe extends Soul {
     var throwSpeed = 35;
     var throwDampening = 1;
     var retractSpeed = 40;
+    var debug = false;
 
     // Prevent instant recall of axe with minor time lag to button listen
     var t = 0;
@@ -29,10 +30,11 @@ class Axe extends Soul {
     var centerRotationOffset = new Vector2(30, 30);
 
     // Rotation params
-    var angularVelocityUnit = Math.PI / (2 * 8 * 4);
-    var angularVelocity = Math.PI / (2 * 8);
+    var angularVelocityUnit = Math.PI / (2 * 6 * 4);
+    var angularVelocity = Math.PI / (2 * 6);
     var angle = -Math.PI / 2;
     var inGround: Bool = false;
+    var collisionScale: Float = 0.8;
 
     // freefall dimensions
     public var velocity: Vector2;
@@ -40,7 +42,6 @@ class Axe extends Soul {
 
     override public function new(position: Vector2, direction: Vector2) {
         super(position);
-        trace("Axe spawn");
         // EDIT
         velocity = direction.normalized().mult(throwSpeed);
     }
@@ -68,7 +69,7 @@ class Axe extends Soul {
         // ORDER IMPORTANT
         // transition into idle
         if (state == Retract) {
-            if (position.sub(targetPosition).length < 50) {
+            if (position.sub(targetPosition).length < 20) {
                 // FLAG FOR DESPAWN
                 deactivate();
             }
@@ -93,7 +94,6 @@ class Axe extends Soul {
 
     override public function deactivate() {
         state = Inactive;
-        trace("Axe will die");
     }
 
     function freefall() {
@@ -112,9 +112,7 @@ class Axe extends Soul {
     function resolveCollisions(geometry:Array<differ.shapes.Shape>) {
 		var collides = false;
 		for (shape in geometry) {
-			var potentialCollision = shape.testPolygon(
-                Polygon.rectangle(position.x, position.y, scaledSize.x / 1.5, scaledSize.y / 1.5,
-                false));
+			var potentialCollision = shape.testPolygon(getCollider());
 			if (potentialCollision != null) {
                 collides = true;
 				velocity.x -= potentialCollision.separationX;
@@ -122,14 +120,26 @@ class Axe extends Soul {
 			}
 		}
 		return collides;
-	}
+    }
+    
+    override public function getCollider() {
+        var collisionSize = scaledSize.mult(collisionScale);
+        var positionCollision = position.add(scaledSize.mult(1-collisionScale).div(2));
+        return Polygon.rectangle(positionCollision.x, positionCollision.y, collisionSize.x, collisionSize.y,
+            false);
+    }
 
     override public function render(g:Graphics) {
         if (state != Inactive) {
             g.color = kha.Color.Green;
             // Need to offset for center of sword
             if (state == Retract) {
-                g.drawScaledImage(Assets.images.axe, position.x, position.y, 60, 60);
+                g.drawScaledImage(Assets.images.shuriken, position.x, position.y, scaledSize.x, scaledSize.y);
+                if (debug) {
+                    g.color = kha.Color.Magenta;
+                    var positionCollision = position.add(scaledSize.mult(1-collisionScale).div(2));
+                    g.drawRect(positionCollision.x, positionCollision.y, scaledSize.x * collisionScale, scaledSize.y * collisionScale);
+                }
             } else if (state == Thrown) {
                 renderRotation(g);
             }
@@ -147,9 +157,14 @@ class Axe extends Soul {
 			)
 		);
 		g.drawScaledImage(
-			Assets.images.axe,
+			Assets.images.shuriken,
 			position.x, position.y,
-			scaledSize.x, scaledSize.y);
+            scaledSize.x, scaledSize.y);
+        if (debug) {
+            g.color = kha.Color.Magenta;
+            var positionCollision = position.add(scaledSize.mult(1-collisionScale).div(2));
+            g.drawRect(positionCollision.x, positionCollision.y, scaledSize.x * collisionScale, scaledSize.y * collisionScale);
+        }
 		g.popTransformation();
     }
 }

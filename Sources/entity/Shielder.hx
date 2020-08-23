@@ -69,7 +69,7 @@ class Shielder extends Entity {
         resolveCollisions(level.colliders);
         velocity.x *= .9;
     }
-    public function getCollider() {
+    override public function getCollider() {
         return Polygon.rectangle(position.x - (size.x * .5) + velocity.x, position.y - (size.y) + velocity.y, size.x, size.y, false);
     }
     public function getShieldCollider() {

@@ -1,6 +1,7 @@
 package entity.soul;
 
 import kha.math.Vector2;
+import differ.shapes.Polygon;
 
 class Soul extends Entity {
     public var targetPosition:Vector2 = new Vector2();

@@ -7,6 +7,8 @@ import kha.math.FastMatrix3;
 import differ.shapes.Polygon;
 import differ.shapes.Shape;
 
+import kha.audio1.Audio;
+
 enum DaggerState {
     Attack;
     AttackIdle;
@@ -18,7 +20,7 @@ class Dagger extends Soul {
     public var state = Attack;
 
     // attack dimensions
-    var baseSpeed = 25;
+    var baseSpeed = 35;
 
     // 50% ratio
     var scaledSize = new Vector2(60, 80);
@@ -26,11 +28,13 @@ class Dagger extends Soul {
 
     var velocity: Vector2 = new Vector2(0,0);
     var angle: Float = 0;
+    var collisionScale: Float = 2/3;
+    var debug = false;
 
     override public function new(position: Vector2) {
         super(position);
-        trace("Dagger spawn");
         // TWEAK THEN APPLY TO RENDER()
+        Audio.play(Assets.sounds.shortKnifeSlice);
     }
 
     function transitionTo(newState: DaggerState, newTarget: Vector2) {
@@ -76,16 +80,13 @@ class Dagger extends Soul {
     }
 
     override public function deactivate() {
-        trace("Dagger will die");
         state = Inactive;
     }
 
     function resolveCollisions(geometry:Array<differ.shapes.Shape>) {
 		var collides = false;
 		for (shape in geometry) {
-			var potentialCollision = shape.testPolygon(
-                Polygon.rectangle(position.x, position.y, scaledSize.x / 1.5, scaledSize.y / 1.5,
-                false));
+			var potentialCollision = shape.testPolygon(getCollider());
 			if (potentialCollision != null) {
                 collides = true;
 				velocity.x -= potentialCollision.separationX;
@@ -93,7 +94,14 @@ class Dagger extends Soul {
 			}
 		}
 		return collides;
-	}
+    }
+    
+    override public function getCollider() {
+        var collisionSize = scaledSize.mult(collisionScale);
+        var positionCollision = position.add(scaledSize.mult(1-collisionScale).div(2));
+        return Polygon.rectangle(positionCollision.x, positionCollision.y, collisionSize.x, collisionSize.y,
+            false);
+    }
 
     function shootToTarget() {
         // calibrate angle
@@ -121,7 +129,12 @@ class Dagger extends Soul {
 				FastMatrix3.translation(-translation.x, -translation.y)
 			)
 		);
-		g.drawScaledImage(Assets.images.dagger3, position.x, position.y, scaledSize.x, scaledSize.y);
-		g.popTransformation();
+        g.drawScaledImage(Assets.images.dagger3, position.x, position.y, scaledSize.x, scaledSize.y);
+        if (debug) {
+            g.color = kha.Color.Magenta;
+            var positionCollision = position.add(scaledSize.mult(1-collisionScale).div(2));
+            g.drawRect(positionCollision.x, positionCollision.y, scaledSize.x * collisionScale, scaledSize.y * collisionScale);
+        }
+        g.popTransformation();
     }
 }
