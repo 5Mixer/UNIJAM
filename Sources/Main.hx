@@ -1,5 +1,7 @@
 package;
 
+import kha.audio1.Audio;
+import kha.audio2.AudioChannel;
 import states.State;
 import kha.Assets;
 import kha.Framebuffer;
@@ -21,6 +23,7 @@ class Main {
 		overlay = new Overlay();
 		// state = new states.Play(input);
 		state = new states.Menu();
+		var music = Audio.play(Assets.sounds.ambient, true);
 
 		Scheduler.addTimeTask(function () { update(); }, 0, 1 / 60);
 		System.notifyOnFrames(function (frames) { render(frames[0]); });

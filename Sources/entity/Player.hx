@@ -1,8 +1,6 @@
 package entity;
 
 import differ.shapes.Ray.InfiniteState;
-import differ.math.Vector;
-import differ.sat.SAT2D;
 import rendering.RenderPass;
 import differ.shapes.Polygon;
 import differ.shapes.Shape;
@@ -12,6 +10,11 @@ import spriter.EntityInstance;
 import imagesheet.ImageSheet;
 import entity.soul.Soul;
 
+import kha.audio1.Audio;
+import kha.audio1.AudioChannel;
+import kha.Sound;
+import kha.Assets;
+
 using spriterkha.SpriterG2;
 
 class Player extends Entity {
@@ -20,6 +23,7 @@ class Player extends Entity {
 	var size:Vector2;
 
 	public var airJumps = 0;
+	public var walkChannel: AudioChannel;
 
 	public var maxJumps = 2;
 
@@ -38,9 +42,10 @@ class Player extends Entity {
     public var chestOffset = new Vector2(-50, -100); // offset from player position to get chest
     
     var scale = .25;
-    var onGround = false;
+	var onGround = false;
+	var debug = false;
 
-    var facingRight = true;
+	var facingRight = true;
 
 	override public function new(maskControlPass:rendering.RenderPass, imageSheet:ImageSheet, spriter:Spriter) {
 		super();
@@ -52,7 +57,10 @@ class Player extends Entity {
 		maskControlPass.registerRenderer(renderMask);
         entity = spriter.createEntity("player");
         this.imageSheet = imageSheet;
-        entity.speed = .5;
+		entity.speed = .5;
+		
+		walkChannel = Audio.play(Assets.sounds.footstep00, true);
+		walkChannel.stop();
 	}
 
 	override public function update(input:Input, level:Level) {
@@ -74,6 +82,13 @@ class Player extends Entity {
 		if (input.right) {
             velocity.x = Math.min(speed, velocity.x + acceleration);
             facingRight = true;
+		}
+
+		// Walking sound
+		if (onGround && (input.left || input.right)) {
+			walkChannel.play();
+		} else {
+			walkChannel.stop();
 		}
 
 		// Decelerate on no input
@@ -130,9 +145,6 @@ class Player extends Entity {
 				collides = true;
 				velocity.x -= potentialCollision.separationX;
                 velocity.y -= potentialCollision.separationY;
-                if (potentialCollision.separationY > 0) {
-                    onGround = true;
-                }
 				airJumps = 0;
 			}
         }
@@ -148,16 +160,21 @@ class Player extends Entity {
 	}
 
 	override public function render(g:kha.graphics2.Graphics) {
-		// var debug = false;
-		// if (debug)
-
         g.pushTransformation(g.transformation.multmat(kha.math.FastMatrix3.translation(position.x + (facingRight ? -size.x / 2 : size.x / 2), position.y-size.y))
 			.multmat(kha.math.FastMatrix3.scale(scale * (facingRight ? 1 : -1), scale)));
 		g.color = kha.Color.White;
-        // g.drawRect(0, 0, size.x, size.y);
+		// g.drawRect(0, 0, size.x, size.y);
 
         g.popTransformation();
-        if (soul != null) soul.render(g);
+		if (soul != null) soul.render(g);
+		if (debug) {
+			if (onGround) {
+				g.color = kha.Color.Green;
+			} else {
+				g.color = kha.Color.Red;
+			}
+			g.fillRect(position.x, position.y, 10, 10);
+		}
 	}
 
 	public function renderMask(pass:RenderPass) {

@@ -41,10 +41,6 @@ class Input {
         if (key == KeyCode.Two && onSoulSummon != null) {
             onSoulSummon("axe");
         }
-        // debug stupid weapon disappearances
-        if (key == KeyCode.Zero && onDespawn != null) {
-            onDespawn();
-        }
     }
     function keyUp(key:KeyCode) {
         if (key == KeyCode.A || key == KeyCode.Left) {
