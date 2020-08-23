@@ -89,9 +89,10 @@ class Bat extends Entity {
 
         }
     }
-    public function getCollider() {
+    override public function getCollider() {
         return Polygon.rectangle(position.x - (size.x * .5), position.y - (size.y), size.x, size.y, false);
     }
+    
     override public function render(g:Graphics) {
         g.pushTransformation(g.transformation.multmat(kha.math.FastMatrix3.translation(position.x + (-size.x / 2), position.y-size.y))
         .multmat(kha.math.FastMatrix3.scale(scale, scale)));

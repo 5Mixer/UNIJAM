@@ -128,7 +128,7 @@ class Axe extends Soul {
         return Polygon.rectangle(positionCollision.x, positionCollision.y, collisionSize.x, collisionSize.y,
             false);
     }
-1
+
     override public function render(g:Graphics) {
         if (state != Inactive) {
             g.color = kha.Color.Green;

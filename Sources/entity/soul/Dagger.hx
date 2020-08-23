@@ -29,6 +29,7 @@ class Dagger extends Soul {
     var velocity: Vector2 = new Vector2(0,0);
     var angle: Float = 0;
     var collisionScale: Float = 2/3;
+    var debug = false;
 
     override public function new(position: Vector2) {
         super(position);
@@ -129,9 +130,11 @@ class Dagger extends Soul {
 			)
 		);
         g.drawScaledImage(Assets.images.dagger3, position.x, position.y, scaledSize.x, scaledSize.y);
-        g.color = kha.Color.Magenta;
-        var positionCollision = position.add(scaledSize.mult(1-collisionScale).div(2));
-        g.drawRect(positionCollision.x, positionCollision.y, scaledSize.x * collisionScale, scaledSize.y * collisionScale);
-		g.popTransformation();
+        if (debug) {
+            g.color = kha.Color.Magenta;
+            var positionCollision = position.add(scaledSize.mult(1-collisionScale).div(2));
+            g.drawRect(positionCollision.x, positionCollision.y, scaledSize.x * collisionScale, scaledSize.y * collisionScale);
+        }
+        g.popTransformation();
     }
 }
