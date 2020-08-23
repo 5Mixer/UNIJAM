@@ -66,7 +66,8 @@ class Shielder extends Entity {
             animation = "idle";
         }
 
-		resolveCollisions(level.colliders);
+        resolveCollisions(level.colliders);
+        velocity.x *= .9;
     }
     function resolveCollisions(geometry:Array<differ.shapes.Shape>) {
 		var collides = false;
