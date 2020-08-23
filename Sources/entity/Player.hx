@@ -61,9 +61,6 @@ class Player extends Entity {
         entity = spriter.createEntity("player");
         this.imageSheet = imageSheet;
 		entity.speed = .5;
-		
-		// walkChannel = Audio.play(Assets.sounds.footstep05, false);
-		// walkChannel.volume = .3;
 	}
 
     var t = 0;

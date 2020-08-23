@@ -170,6 +170,14 @@ class Play extends State {
 			}
 		}
 
+		for (enemy in enemies) {
+			var enemyCollider = enemy.getCollider();
+			var collision = (enemyCollider != null) ? playerCollider.testPolygon(enemyCollider) : null;
+			if (collision != null) {
+				die();
+			}
+		}
+
 		camera.position.x = Math.max(0, Math.min(8000 - kha.Window.get(0).width, player.position.x - kha.Window.get(0).width/2));
 		camera.position.y = Math.max(0, Math.min(1800 - kha.Window.get(0).height, player.position.y - kha.Window.get(0).height/2));
     }
