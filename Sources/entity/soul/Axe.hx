@@ -4,6 +4,8 @@ import kha.Assets;
 import kha.graphics2.Graphics;
 import kha.math.Vector2;
 import kha.math.FastMatrix3;
+import differ.shapes.Polygon;
+import differ.shapes.Shape;
 
 enum AxeState {
     Thrown;
@@ -16,7 +18,7 @@ class Axe extends Soul {
 
     // float dimensions
     var throwSpeed = 35;
-    var throwDampening = 0.995;
+    var throwDampening = 1;
     var retractSpeed = 40;
 
     // Prevent instant recall of axe with minor time lag to button listen
@@ -27,8 +29,10 @@ class Axe extends Soul {
     var centerRotationOffset = new Vector2(30, 30);
 
     // Rotation params
+    var angularVelocityUnit = Math.PI / (2 * 8 * 4);
     var angularVelocity = Math.PI / (2 * 8);
-    var angle = 0.0;    
+    var angle = -Math.PI / 2;
+    var inGround: Bool = false;
 
     // freefall dimensions
     public var velocity: Vector2;
@@ -48,7 +52,19 @@ class Axe extends Soul {
     override public function update(input:Input, level:Level) {
         super.update(input, level); // parses mouse position
         t++; // quickfix to avoid insta-return
-        angle = angle + angularVelocity;
+        var collide = resolveCollisions(level.colliders);
+
+        // Collide-obeying rotational momentum for throws
+        if (state == Thrown) {
+            if (!collide) {
+                angle = angle + angularVelocity;
+            } else {
+                velocity = new Vector2(0,0);
+                angularVelocity = 0;
+                inGround = true;
+            }
+        }
+        
         // ORDER IMPORTANT
         // transition into idle
         if (state == Retract) {
@@ -66,6 +82,7 @@ class Axe extends Soul {
         }
         if (state == Retract) {
             targetPosition = thrower.position.add(thrower.chestOffset);
+            inGround = false;
             retract();
         }
     }
@@ -80,7 +97,9 @@ class Axe extends Soul {
     }
 
     function freefall() {
-        velocity = velocity.add(gravityAcceleration).mult(throwDampening);
+        if (!inGround) {
+            velocity = velocity.mult(throwDampening).add(gravityAcceleration);
+        }
         position = position.add(velocity);
     }
 
@@ -89,6 +108,21 @@ class Axe extends Soul {
             targetPosition.sub(position).normalized().mult(retractSpeed)
         );
     }
+
+    function resolveCollisions(geometry:Array<differ.shapes.Shape>) {
+		var collides = false;
+		for (shape in geometry) {
+			var potentialCollision = shape.testPolygon(
+                Polygon.rectangle(position.x, position.y, scaledSize.x / 1.5, scaledSize.y / 1.5,
+                false));
+			if (potentialCollision != null) {
+                collides = true;
+				velocity.x -= potentialCollision.separationX;
+				velocity.y -= potentialCollision.separationY;
+			}
+		}
+		return collides;
+	}
 
     override public function render(g:Graphics) {
         if (state != Inactive) {
@@ -104,7 +138,6 @@ class Axe extends Soul {
     }
 
     function renderRotation(g: Graphics) {
-        var point = position.sub(centerRotationOffset);
         var translation = position.add(centerRotationOffset);
         g.pushTransformation(
 			g.transformation.multmat(
@@ -115,7 +148,7 @@ class Axe extends Soul {
 		);
 		g.drawScaledImage(
 			Assets.images.axe,
-			point.x, point.y,
+			position.x, position.y,
 			scaledSize.x, scaledSize.y);
 		g.popTransformation();
     }
