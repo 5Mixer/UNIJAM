@@ -132,7 +132,6 @@ class Axe extends Soul {
     override public function render(g:Graphics) {
         if (state != Inactive) {
             g.color = kha.Color.Green;
-            // Need to offset for center of sword
             if (state == Retract) {
                 g.drawScaledImage(Assets.images.shuriken, position.x, position.y, scaledSize.x, scaledSize.y);
                 if (debug) {

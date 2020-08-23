@@ -33,7 +33,6 @@ class Dagger extends Soul {
 
     override public function new(position: Vector2) {
         super(position);
-        // TWEAK THEN APPLY TO RENDER()
         Audio.play(Assets.sounds.shortKnifeSlice);
     }
 

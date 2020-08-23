@@ -97,7 +97,6 @@ class Play extends State {
 		input.onSoulSummon = function(type: String) { 
 			player.changeSoulTo(type); 
 		}
-		input.onDespawn = function() {player.soul.deactivate();}
 	}
 
     override public function update(input:Input) {

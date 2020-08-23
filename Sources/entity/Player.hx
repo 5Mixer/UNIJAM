@@ -9,6 +9,11 @@ import spriter.EntityInstance;
 import imagesheet.ImageSheet;
 import entity.soul.Soul;
 
+import kha.audio1.Audio;
+import kha.audio1.AudioChannel;
+import kha.Sound;
+import kha.Assets;
+
 using spriterkha.SpriterG2;
 
 class Player extends Entity {
@@ -17,6 +22,7 @@ class Player extends Entity {
 	var size:Vector2;
 
 	public var airJumps = 0;
+	public var walkChannel: AudioChannel;
 
 	public var maxJumps = 2;
 
@@ -36,7 +42,8 @@ class Player extends Entity {
     
     var scale = .25;
 
-    var facingRight = true;
+	var facingRight = true;
+	var onGround = false;
 
 	override public function new(maskControlPass:rendering.RenderPass, imageSheet:ImageSheet, spriter:Spriter) {
 		super();
@@ -48,7 +55,10 @@ class Player extends Entity {
 		maskControlPass.registerRenderer(renderMask);
         entity = spriter.createEntity("player");
         this.imageSheet = imageSheet;
-        entity.speed = .5;
+		entity.speed = .5;
+		
+		walkChannel = Audio.play(Assets.sounds.footstep00, true);
+		walkChannel.stop();
 	}
 
 	override public function update(input:Input, level:Level) {
@@ -63,6 +73,13 @@ class Player extends Entity {
 		if (input.right) {
             velocity.x = Math.min(speed, velocity.x + acceleration);
             facingRight = true;
+		}
+
+		// Walking sound
+		if (onGround && (input.left || input.right)) {
+			walkChannel.play();
+		} else {
+			walkChannel.stop();
 		}
 
 		// Decelerate on no input
@@ -84,6 +101,11 @@ class Player extends Entity {
 		position = position.add(velocity);
 
 		resolveCollisions(level.colliders);
+		if (collide && airJumps == 0) {
+			onGround = true;
+		} else {
+			onGround = false;      
+		}
 
 		if (Math.abs(velocity.x) < 2 && animation != "idle") {
 			entity.transition("idle", .1);
@@ -139,10 +161,16 @@ class Player extends Entity {
         g.pushTransformation(g.transformation.multmat(kha.math.FastMatrix3.translation(position.x + (facingRight ? -size.x / 2 : size.x / 2), position.y-size.y))
 			.multmat(kha.math.FastMatrix3.scale(scale * (facingRight ? 1 : -1), scale)));
 		g.color = kha.Color.White;
-        // g.drawRect(0, 0, size.x, size.y);
+		// g.drawRect(0, 0, size.x, size.y);
 
         g.popTransformation();
-        if (soul != null) soul.render(g);
+		if (soul != null) soul.render(g);
+		if (onGround) {
+			g.color = kha.Color.Green;
+		} else {
+			g.color = kha.Color.Red;
+		}
+		g.fillRect(position.x, position.y, 10, 10);
 	}
 
 	public function renderMask(pass:RenderPass) {
