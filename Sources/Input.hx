@@ -12,6 +12,7 @@ class Input {
     public var onSoulSummon:(type: String)->Void;
     public var onJump:()->Void;
     public var onDespawn:()->Void;
+    public var restart:()->Void;
     
     public var leftMouseDown = false;
     public var mousePosition: Vector2 = null;
@@ -30,6 +31,9 @@ class Input {
         }
         if (key == KeyCode.D || key == KeyCode.Right) {
             right = true;
+        }
+        if (key == KeyCode.R) {
+            restart();
         }
         if (key == KeyCode.One && onSoulSummon != null) {
             onSoulSummon("dagger");

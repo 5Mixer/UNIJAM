@@ -19,6 +19,7 @@ class Play extends State {
 	var layer:Layer;
 	var level:Level;
 	var camera:Camera;
+	var input:Input;
 	var particleSystems:Array<ParticleSystem> = [];
 	
 	var enemies:Array<Entity> = [];
@@ -35,8 +36,13 @@ class Play extends State {
 	var imageSheet:ImageSheet;
 	var spriter:Spriter;
 
-    override public function new(input) {
-        super();
+	var levelNumber:Int;
+
+    override public function new(input, levelNumber=1) {
+		super();
+		
+		this.input = input;
+		this.levelNumber = levelNumber;
 		
 		camera = new Camera();
 		input.camera = camera;
@@ -51,7 +57,7 @@ class Play extends State {
 		
 		player = new Player(playerMaskTexture, imageSheet, spriter);
 		layer = new Layer(camera);
-		level = new Level();
+		level = new Level(levelNumber);
 		
 		for (tiledEntity in level.tiled.entities) {
 			var entityPosition = tiledEntity.position.mult(1); // Clone position
@@ -97,7 +103,25 @@ class Play extends State {
 		input.onSoulSummon = function(type: String) { 
 			player.changeSoulTo(type); 
 		}
+		input.restart = die;
 		input.onDespawn = function() {player.soul.deactivate();}
+	}
+
+	function die() {
+		Main.overlay.startTransition();
+		Main.overlay.callback = function() {
+			Main.overlay.callback = null;
+			Main.overlay.endTransition();
+			Main.state = new Play(input, levelNumber);
+		}
+	}
+	function nextLevel() {
+		Main.overlay.startTransition();
+		Main.overlay.callback = function() {
+			Main.overlay.callback = null;
+			Main.overlay.endTransition();
+			Main.state = new Play(input, levelNumber++);
+		}
 	}
 
     override public function update(input:Input) {
@@ -113,13 +137,12 @@ class Play extends State {
 		var playerCollider = player.getCollider();
 		for (zone in level.tiled.zones) {
 			if (playerCollider.testPolygon(zone.collider) != null) {
-				particleSystems.push(new DeathParticleSystem(player.position.mult(1)));
-
-				Main.overlay.startTransition();
-				Main.overlay.callback = function() {
-					Main.overlay.callback = null;
-					Main.overlay.endTransition();
-					Main.state = new Play(input);
+				if (zone.type == "death") {
+					particleSystems.push(new DeathParticleSystem(player.position.mult(1)));
+					die();
+				}
+				if (zone.type == "exit") {
+					nextLevel();
 				}
 			}
 		}

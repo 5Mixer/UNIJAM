@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.4" tiledversion="1.4.2" orientation="orthogonal" renderorder="right-down" width="20" height="20" tilewidth="16" tileheight="16" infinite="1" nextlayerid="6" nextobjectid="37">
+<map version="1.4" tiledversion="1.4.2" orientation="orthogonal" renderorder="right-down" width="20" height="20" tilewidth="16" tileheight="16" infinite="1" nextlayerid="6" nextobjectid="38">
  <imagelayer id="2" name="Image Layer 1">
   <image source="scene1foregroundcomp.png"/>
  </imagelayer>
@@ -12,7 +12,7 @@
   </object>
  </objectgroup>
  <objectgroup id="5" name="Zones">
-  <object id="36" type="death" x="1210.79" y="1500.61" width="242.424" height="278.788"/>
+  <object id="37" type="exit" x="7788" y="1198" width="1360" height="456"/>
  </objectgroup>
  <objectgroup id="4" name="Entities">
   <object id="4" type="bat" x="3110.67" y="686.667">

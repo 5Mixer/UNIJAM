@@ -7,8 +7,11 @@ class Level {
     public var colliders:Array<Shape> = [];
     public var tiled:Tiled;
 
-    public function new() {
-        tiled = new Tiled(kha.Assets.blobs.level1_tmx.toString());
+    public function new(levelNumber) {
+        tiled = new Tiled(switch levelNumber {
+            case 1: kha.Assets.blobs.level1_tmx.toString();
+            default: "";
+        });
         for (polygon in tiled.polygons){
             for (triangle in polygon.triangles) {
                 var vertices = [];

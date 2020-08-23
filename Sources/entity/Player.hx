@@ -165,8 +165,8 @@ class Player extends Entity {
 
         // g.fillRect(position.x - size.x/2, position.y - size.y, size.x, size.y);
 		g.pushTransformation(g.transformation.multmat(kha.math.FastMatrix3.translation(position.x + (facingRight ? -size.x / 2 : size.x / 2), position.y-size.y))
-			.multmat(kha.math.FastMatrix3.scale(scale * (facingRight ? 1 : -1), scale)));
-        g.color = onGround? kha.Color.Black:kha.Color.White;
+            .multmat(kha.math.FastMatrix3.scale(scale * (facingRight ? 1 : -1), scale)));
+        g.color = kha.Color.White;
 		g.drawSpriter(imageSheet, entity, 0, 0);
 
         g.popTransformation();
