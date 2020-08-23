@@ -21,6 +21,7 @@ class Play extends State {
     var camera:Camera;
 	
 	var enemies:Array<Entity> = [];
+	var shielders:Array<Shielder> = [];
 	var angle = 0.0;
 
 	var playerTexture:rendering.RenderPass;
@@ -62,6 +63,11 @@ class Play extends State {
 			if (entity == null) {
 				throw "Unexpected entity type loaded";
 			}
+
+			if (tiledEntity.type == "shielder") {
+				shielders.push(cast entity);
+			}
+
 			enemies.push(entity);
 		}
 
@@ -93,7 +99,16 @@ class Play extends State {
 		layer.update();
 		for (enemy in enemies)
 			enemy.update(input, level);
-        playerTextureParticles.update();
+		playerTextureParticles.update();
+		
+		var playerCollider = player.getCollider();
+		for (shielder in shielders) {
+			var collision = playerCollider.testPolygon(shielder.getShieldCollider());
+			if (collision != null) {
+				player.velocity.x = collision.separationX > 0 ? 20 : -20;
+				player.velocity.y -= 5;
+			}
+		}
 
 		camera.position.x = Math.max(0, Math.min(8000 - kha.Window.get(0).width, player.position.x - kha.Window.get(0).width/2));
 		camera.position.y = Math.max(0, Math.min(1800 - kha.Window.get(0).height, player.position.y - kha.Window.get(0).height/2));

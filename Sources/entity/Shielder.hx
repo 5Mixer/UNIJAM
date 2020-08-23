@@ -69,8 +69,11 @@ class Shielder extends Entity {
         resolveCollisions(level.colliders);
         velocity.x *= .9;
     }
-    function getCollider() {
+    public function getCollider() {
         return Polygon.rectangle(position.x - (size.x * .5) + velocity.x, position.y - (size.y) + velocity.y, size.x, size.y, false);
+    }
+    public function getShieldCollider() {
+        return Polygon.rectangle(position.x - (size.x * .5) + velocity.x, position.y - (size.y) + velocity.y, 5, size.y, false);
     }
     function resolveCollisions(geometry:Array<differ.shapes.Shape>) {
         var collides = false;
@@ -86,6 +89,8 @@ class Shielder extends Entity {
 		return collides;
 	}
     override public function render(g:Graphics) {
+		// g.pushTransformation(g.transformation.multmat(kha.math.FastMatrix3.translation(position.x + (facingRight ? size.x / 2 : -size.x / 2), position.y-size.y))
+		// 	.multmat(kha.math.FastMatrix3.scale(scale * (facingRight ? -1 : 1), scale)));
         // g.fillRect(position.x-size.x/2,position.y-size.y,size.x,size.y);
         g.pushTransformation(g.transformation.multmat(kha.math.FastMatrix3.translation(position.x + (-size.x / 2), position.y-size.y))
         .multmat(kha.math.FastMatrix3.scale(scale, scale)));

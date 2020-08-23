@@ -56,11 +56,12 @@ class Player extends Entity {
 
 		// Left/right change horizontal velocity
 		if (input.left) {
-			velocity = velocity.add(new Vector2(-acceleration, 0));
+			// velocity = velocity.add(new Vector2(-acceleration, 0));
+            velocity.x = Math.max(-speed, velocity.x - acceleration);
             facingRight = false;
 		}
 		if (input.right) {
-            velocity = velocity.add(new Vector2(acceleration, 0));
+            velocity.x = Math.min(speed, velocity.x + acceleration);
             facingRight = true;
 		}
 
@@ -79,7 +80,7 @@ class Player extends Entity {
 		}
 
 		// Cap velocity add speed and apply
-		velocity.x = Math.min(Math.abs(velocity.x), speed) * (velocity.x > 0 ? 1 : -1);
+		// velocity.x = Math.min(Math.abs(velocity.x), speed) * (velocity.x > 0 ? 1 : -1);
 		position = position.add(velocity);
 
 		resolveCollisions(level.colliders);
@@ -104,7 +105,7 @@ class Player extends Entity {
         }
     }
 
-    function getCollider() {
+    public function getCollider() {
         return Polygon.rectangle(position.x - (size.x * .5) + velocity.x, position.y - (size.y) + velocity.y, size.x, size.y, false);
     }
 
