@@ -67,6 +67,10 @@ class Play extends State {
 				case "wolf": new Wolf(imageSheet, spriter, entityPosition);
 				default: null;
 			};
+			if (tiledEntity.type == "spawn") {
+				player.position = entityPosition.mult(1);
+				continue;
+			}
 			if (entity == null) {
 				throw "Unexpected entity type loaded";
 			}
@@ -160,8 +164,8 @@ class Play extends State {
 				var enemyCollider = enemy.getCollider();
 				var collision = (enemyCollider != null) ? soulCollider.testPolygon(enemyCollider) : null;
 				if (collision != null) {
-					// kill enemy
-					trace("enemy dead");
+					enemies.remove(enemy);
+					// enemy.kill();
 				}
 			}
 		}

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.4" tiledversion="1.4.2" orientation="orthogonal" renderorder="right-down" width="20" height="20" tilewidth="16" tileheight="16" infinite="1" nextlayerid="6" nextobjectid="38">
+<map version="1.4" tiledversion="1.4.2" orientation="orthogonal" renderorder="right-down" width="20" height="20" tilewidth="16" tileheight="16" infinite="1" nextlayerid="6" nextobjectid="46">
  <imagelayer id="2" name="Image Layer 1">
-  <image source="scene1foregroundcomp.png"/>
+  <image source="../Scene1/scene1foregroundcomp.png"/>
  </imagelayer>
  <objectgroup id="3" name="Colliders">
   <object id="2" x="0" y="1555.25">
@@ -11,8 +11,8 @@
    <polygon points="0,0 125,438 180,756 21,674 28,851 52,884 -80,899"/>
   </object>
  </objectgroup>
- <objectgroup id="5" name="Zones">
-  <object id="37" type="exit" x="7788" y="1198" width="1360" height="456"/>
+ <objectgroup id="5" name="Zones" offsetx="6744" offsety="-205.697">
+  <object id="36" type="exit" x="1210.79" y="1500.61" width="242.424" height="278.788"/>
  </objectgroup>
  <objectgroup id="4" name="Entities">
   <object id="4" type="bat" x="3110.67" y="686.667">
@@ -31,6 +31,33 @@
    <point/>
   </object>
   <object id="28" type="shielder" x="828" y="1304">
+   <point/>
+  </object>
+  <object id="37" type="spawn" x="392" y="1280">
+   <point/>
+  </object>
+  <object id="38" type="wolf" x="6554.55" y="557.576">
+   <point/>
+  </object>
+  <object id="39" type="wolf" x="5827.27" y="712.121">
+   <point/>
+  </object>
+  <object id="40" type="shielder" x="6957.58" y="369.697">
+   <point/>
+  </object>
+  <object id="41" type="bat" x="5533.33" y="378.788">
+   <point/>
+  </object>
+  <object id="42" type="bat" x="6015.15" y="339.394">
+   <point/>
+  </object>
+  <object id="43" type="wolf" x="7384.85" y="1500">
+   <point/>
+  </object>
+  <object id="44" type="bat" x="7481.82" y="845.455">
+   <point/>
+  </object>
+  <object id="45" type="bat" x="7448.48" y="1075.76">
    <point/>
   </object>
  </objectgroup>

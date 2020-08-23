@@ -24,6 +24,7 @@ class Main {
 		// state = new states.Play(input);
 		state = new states.Menu();
 		var music = Audio.play(Assets.sounds.ambient, true);
+		music.volume = .6;
 
 		Scheduler.addTimeTask(function () { update(); }, 0, 1 / 60);
 		System.notifyOnFrames(function (frames) { render(frames[0]); });

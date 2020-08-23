@@ -1,5 +1,6 @@
 package entity;
 
+import kha.Scheduler;
 import differ.shapes.Ray.InfiniteState;
 import rendering.RenderPass;
 import differ.shapes.Polygon;
@@ -47,6 +48,8 @@ class Player extends Entity {
 
 	var facingRight = true;
 
+	var times = [75/400, 290/400];
+
 	override public function new(maskControlPass:rendering.RenderPass, imageSheet:ImageSheet, spriter:Spriter) {
 		super();
 
@@ -59,11 +62,15 @@ class Player extends Entity {
         this.imageSheet = imageSheet;
 		entity.speed = .5;
 		
-		walkChannel = Audio.play(Assets.sounds.footstep00, true);
-		walkChannel.stop();
+		walkChannel = Audio.play(Assets.sounds.footstep05, false);
+		walkChannel.volume = .3;
+		// walkChannel.stop();
 	}
 
+    var t = 0;
 	override public function update(input:Input, level:Level) {
+		t++;
+
 		entity.step(1/60);
 
         onGround = false;
@@ -84,12 +91,18 @@ class Player extends Entity {
             facingRight = true;
 		}
 
-		// Walking sound
-		if (onGround && (input.left || input.right)) {
+		var prevCount = times.filter(function(a){ return a > (entity.progress - 1/30)%1;}).length;
+		var count = times.filter(function(a){ return a > entity.progress;}).length;
+		if (count != prevCount && onGround && (input.left || input.right)) {
 			walkChannel.play();
 		} else {
-			walkChannel.stop();
+			// walkChannel.stop();
 		}
+		// for (time in times) {
+		// 	if (entity.progress > time && entity.progress - 1/60 <= time) {
+		// 		// Walking sound
+		// 	}
+		// }
 
 		// Decelerate on no input
 		if (!input.left && !input.right) {
