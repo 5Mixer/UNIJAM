@@ -74,11 +74,14 @@ class Wolf extends Entity {
 
 		resolveCollisions(level.colliders);
     }
+    function getCollider() {
+        return Polygon.rectangle(position.x - (size.x * .5) + velocity.x, position.y - (size.y) + velocity.y, size.x, size.y, false);
+    }
     function resolveCollisions(geometry:Array<differ.shapes.Shape>) {
-		var collides = false;
+        var collides = false;
+        var collider = getCollider();
 		for (shape in geometry) {
-			var potentialCollision = shape.testPolygon(Polygon.rectangle(position.x - (size.x * .5) + velocity.x, position.y - (size.y) + velocity.y, size.x, size.y,
-				false));
+			var potentialCollision = shape.testPolygon(collider);
 			if (potentialCollision != null) {
                 collides = true;
                 if (Math.abs(potentialCollision.separationX) > .1) {
