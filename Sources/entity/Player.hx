@@ -24,7 +24,7 @@ class Player extends Entity {
 	var size:Vector2;
 
 	public var airJumps = 0;
-	public var walkChannel: AudioChannel;
+	// public var walkChannel: AudioChannel;
 
 	public var maxJumps = 2;
 
@@ -62,9 +62,8 @@ class Player extends Entity {
         this.imageSheet = imageSheet;
 		entity.speed = .5;
 		
-		walkChannel = Audio.play(Assets.sounds.footstep05, false);
-		walkChannel.volume = .3;
-		// walkChannel.stop();
+		// walkChannel = Audio.play(Assets.sounds.footstep05, false);
+		// walkChannel.volume = .3;
 	}
 
     var t = 0;
@@ -94,6 +93,11 @@ class Player extends Entity {
 		var prevCount = times.filter(function(a){ return a > (entity.progress - 1/30)%1;}).length;
 		var count = times.filter(function(a){ return a > entity.progress;}).length;
 		if (count != prevCount && onGround && (input.left || input.right)) {
+			// walkChannel.play();
+			
+			var sounds = [Assets.sounds.footstep05, Assets.sounds.footstep04, Assets.sounds.footstep06];
+			var walkChannel = Audio.play(sounds[Math.floor(Math.random() * sounds.length)], false);
+			walkChannel.volume = .1+Math.random()*.1;
 			walkChannel.play();
 		} else {
 			// walkChannel.stop();
@@ -169,6 +173,10 @@ class Player extends Entity {
 			airJumps++;
 
 			velocity.y = -jumpAcceleration;
+			var jumps = [Assets.sounds.jump1, Assets.sounds.jump2, Assets.sounds.jump3 ];
+			var jump = Audio.play(jumps[Math.floor(Math.random() * jumps.length)], false);
+			jump.volume = .1 + Math.random() * .1;
+			jump.play();
 		}
 	}
 
