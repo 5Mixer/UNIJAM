@@ -36,9 +36,11 @@ class TiledEntity {
 	}
 }
 
+
 class Tiled {
 	public var polygons:Array<TiledPolygon> = [];
 	public var entities:Array<TiledEntity> = [];
+	public var zones:Array<Zone> = [];
 
 	public function new (data: String) {
 		loadRawData(data);
@@ -54,6 +56,8 @@ class Tiled {
 				loadPolygonLayer(objectLayer);
 			if (objectLayer.get("name") == "Entities")
 				loadEntityLayer(objectLayer);
+			if (objectLayer.get("name") == "Zones")
+				loadZoneLayer(objectLayer);
 		}
 	}
 
@@ -92,6 +96,17 @@ class Tiled {
 			var type = object.get("type");
 
 			entities.push(new TiledEntity(x, y, type));
+		}
+	}
+	function loadZoneLayer(objectLayer: Xml) {
+		for (object in objectLayer.elements()){
+			var x = Std.parseInt(object.get("x"));
+			var y = Std.parseInt(object.get("y"));
+			var w = Std.parseInt(object.get("width"));
+			var h = Std.parseInt(object.get("height"));
+			var type = object.get("type");
+
+			zones.push(new Zone(x, y, w, h, type));
 		}
 	}
 		

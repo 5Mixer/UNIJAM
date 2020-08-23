@@ -63,6 +63,9 @@ class VerticalParticle extends Particle {
         if (type == Death && Math.random() > .5) {
             velocity.y *= -1;
         }
+        if (type == Death) {
+            velocity.y -= 25;
+        }
     }
     override public function render(g:Graphics) {
         g.color = type == Jump ? kha.Color.White : kha.Color.Black;
@@ -90,6 +93,7 @@ class ParticleSystem {
         for (particle in particles) {
             particle.render(g);
         }
+        g.color = kha.Color.White;
     }
 }
 class JumpParticleSystem extends ParticleSystem{
@@ -104,7 +108,7 @@ class JumpParticleSystem extends ParticleSystem{
 class DeathParticleSystem extends ParticleSystem{
     override public function new(position:Vector2) {
         super(0);
-        for (i in 0...30) {
+        for (i in 0...40) {
             particles.push(new VerticalParticle(position, VerticalParticleType.Death));
         }
     }

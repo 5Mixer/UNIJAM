@@ -1,5 +1,6 @@
 package entity;
 
+import differ.shapes.Ray.InfiniteState;
 import rendering.RenderPass;
 import differ.shapes.Polygon;
 import differ.shapes.Shape;
@@ -41,9 +42,10 @@ class Player extends Entity {
     public var chestOffset = new Vector2(-50, -100); // offset from player position to get chest
     
     var scale = .25;
+	var onGround = false;
+	var debug = false;
 
 	var facingRight = true;
-	var onGround = false;
 
 	override public function new(maskControlPass:rendering.RenderPass, imageSheet:ImageSheet, spriter:Spriter) {
 		super();
@@ -63,6 +65,13 @@ class Player extends Entity {
 
 	override public function update(input:Input, level:Level) {
 		entity.step(1/60);
+
+        onGround = false;
+		for (shape in level.colliders) {
+            if (shape.testPolygon(Polygon.rectangle(position.x-(size.x*.5)+velocity.x, position.y+velocity.y, size.x, 25, false)) != null) {
+                onGround = true;
+            }
+        }
 
 		// Left/right change horizontal velocity
 		if (input.left) {
@@ -90,22 +99,18 @@ class Player extends Entity {
 				velocity.x = 0;
 			}
 		}
+
 		// Gravity
 		var collide = resolveCollisions(level.colliders);
 		if (!collide) {
 			velocity = velocity.add(new Vector2(0, gravity));
-		}
+        }
 
 		// Cap velocity add speed and apply
 		// velocity.x = Math.min(Math.abs(velocity.x), speed) * (velocity.x > 0 ? 1 : -1);
 		position = position.add(velocity);
 
-		resolveCollisions(level.colliders);
-		if (collide && airJumps == 0) {
-			onGround = true;
-		} else {
-			onGround = false;      
-		}
+        resolveCollisions(level.colliders);
 
 		if (Math.abs(velocity.x) < 2 && animation != "idle") {
 			entity.transition("idle", .1);
@@ -139,10 +144,10 @@ class Player extends Entity {
 			if (potentialCollision != null) {
 				collides = true;
 				velocity.x -= potentialCollision.separationX;
-				velocity.y -= potentialCollision.separationY;
+                velocity.y -= potentialCollision.separationY;
 				airJumps = 0;
 			}
-		}
+        }
 		return collides;
 	}
 
@@ -155,9 +160,6 @@ class Player extends Entity {
 	}
 
 	override public function render(g:kha.graphics2.Graphics) {
-		// var debug = false;
-		// if (debug)
-
         g.pushTransformation(g.transformation.multmat(kha.math.FastMatrix3.translation(position.x + (facingRight ? -size.x / 2 : size.x / 2), position.y-size.y))
 			.multmat(kha.math.FastMatrix3.scale(scale * (facingRight ? 1 : -1), scale)));
 		g.color = kha.Color.White;
@@ -165,12 +167,14 @@ class Player extends Entity {
 
         g.popTransformation();
 		if (soul != null) soul.render(g);
-		if (onGround) {
-			g.color = kha.Color.Green;
-		} else {
-			g.color = kha.Color.Red;
+		if (debug) {
+			if (onGround) {
+				g.color = kha.Color.Green;
+			} else {
+				g.color = kha.Color.Red;
+			}
+			g.fillRect(position.x, position.y, 10, 10);
 		}
-		g.fillRect(position.x, position.y, 10, 10);
 	}
 
 	public function renderMask(pass:RenderPass) {
@@ -179,7 +183,7 @@ class Player extends Entity {
         // g.fillRect(position.x - size.x/2, position.y - size.y, size.x, size.y);
 		g.pushTransformation(g.transformation.multmat(kha.math.FastMatrix3.translation(position.x + (facingRight ? -size.x / 2 : size.x / 2), position.y-size.y))
 			.multmat(kha.math.FastMatrix3.scale(scale * (facingRight ? 1 : -1), scale)));
-        g.color = kha.Color.White;
+        g.color = onGround? kha.Color.Black:kha.Color.White;
 		g.drawSpriter(imageSheet, entity, 0, 0);
 
         g.popTransformation();
