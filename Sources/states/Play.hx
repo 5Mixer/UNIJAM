@@ -18,7 +18,8 @@ class Play extends State {
 	var player:Player;
 	var layer:Layer;
 	var level:Level;
-    var camera:Camera;
+	var camera:Camera;
+	var particleSystems:Array<ParticleSystem> = [];
 	
 	var enemies:Array<Entity> = [];
 	var shielders:Array<Shielder> = [];
@@ -71,7 +72,7 @@ class Play extends State {
 			enemies.push(entity);
 		}
 
-		playerTextureParticles = new ParticleSystem();
+		playerTextureParticles = new ParticleSystem(100);
 
 		// connect the render pipeline for player masking
 		playerMask.mask = playerMaskTexture.passImage;
@@ -87,7 +88,12 @@ class Play extends State {
 		});
 
 		// bindings
-		input.onJump = function() { player.attemptJump(); }
+		input.onJump = function() {
+			if (player.airJumps == 0)
+				particleSystems.push(new JumpParticleSystem(player.position.mult(1)));
+			
+			player.attemptJump();
+		}
 		input.onSoulSummon = function(type: String) { 
 			player.changeSoulTo(type); 
 		}
@@ -95,6 +101,8 @@ class Play extends State {
 	}
 
     override public function update(input:Input) {
+		for (system in particleSystems)
+			system.update();
 		player.update(input, level);
 		layer.update();
 		for (enemy in enemies)
@@ -121,6 +129,8 @@ class Play extends State {
     override public function render(g:Graphics) {
 		camera.transform(g);
 		layer.render(g);
+		for (system in particleSystems)
+			system.render(g);
 		playerMask.render(g);
 		player.render(g);
 		for (enemy in enemies)
