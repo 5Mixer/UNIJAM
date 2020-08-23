@@ -111,7 +111,13 @@ class Play extends State {
 			player.changeSoulTo(type); 
 		}
 		input.restart = die;
-		input.onDespawn = function() {player.soul.deactivate();}
+		input.onMouseScroll = function(scroll) {
+			if (scroll < 0) {
+				player.soulSelection = "dagger";
+			} else {
+				player.soulSelection = "shuriken";
+			}
+		}
 	}
 
 	function die() {

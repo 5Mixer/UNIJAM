@@ -11,7 +11,7 @@ class Input {
     public var right = false;
     public var onSoulSummon:(type: String)->Void;
     public var onJump:()->Void;
-    public var onDespawn:()->Void;
+    public var onMouseScroll:(int: Int)->Void;
     public var restart:()->Void;
     
     public var leftMouseDown = false;
@@ -21,7 +21,7 @@ class Input {
 
     public function new () {
         Keyboard.get().notify(keyDown, keyUp, null);
-        Mouse.get().notify(mouseDown, mouseUp, mouseMove, null);
+        Mouse.get().notify(mouseDown, mouseUp, mouseMove, mouseScroll);
     }
     function keyDown(key:KeyCode) {
         if (key == KeyCode.W || key == KeyCode.Space && onJump != null) {
@@ -70,5 +70,8 @@ class Input {
             leftMouseDown = false;
         if (button == 1)
             rightMouseDown = false;
+    }
+    function mouseScroll(int) {
+        if (onMouseScroll != null) onMouseScroll(int);
     }
 }
