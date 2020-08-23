@@ -73,7 +73,7 @@ class Shielder extends Entity {
         return Polygon.rectangle(position.x - (size.x * .5) + velocity.x, position.y - (size.y) + velocity.y, size.x, size.y, false);
     }
     public function getShieldCollider() {
-        return Polygon.rectangle(position.x - (size.x * .5) + velocity.x, position.y - (size.y) + velocity.y, 5, size.y, false);
+        return Polygon.rectangle(position.x - (size.x * .25), position.y - (size.y)*.75, 1, size.y*.5, false);
     }
     function resolveCollisions(geometry:Array<differ.shapes.Shape>) {
         var collides = false;
