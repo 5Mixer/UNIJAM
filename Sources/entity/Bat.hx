@@ -8,6 +8,8 @@ import spriter.Spriter;
 import spriter.EntityInstance;
 import imagesheet.ImageSheet;
 using spriterkha.SpriterG2;
+import differ.shapes.Polygon;
+import differ.shapes.Shape;
 
 enum BatState {
     Idle;
@@ -28,12 +30,16 @@ class Bat extends Entity {
     
     var chargeTime = 0;
     var player:Player;
+
+    var scale = .5;
+    var size:Vector2;
     
     override public function new(player, imageSheet:ImageSheet, spriter:Spriter, position:Vector2) {
         super();
         this.player = player;
         this.position = position;
         idlePosition = position.mult(1); // Clone vector
+        size = new Vector2(500*scale,500*scale);
 
         entity = spriter.createEntity("enemy2");
         entity.play("fly");
@@ -83,9 +89,10 @@ class Bat extends Entity {
 
         }
     }
+    public function getCollider() {
+        return Polygon.rectangle(position.x - (size.x * .5), position.y - (size.y), size.x, size.y, false);
+    }
     override public function render(g:Graphics) {
-        var scale = .5;
-        var size = new Vector2(500*scale,500*scale);
         g.pushTransformation(g.transformation.multmat(kha.math.FastMatrix3.translation(position.x + (-size.x / 2), position.y-size.y))
         .multmat(kha.math.FastMatrix3.scale(scale, scale)));
         g.color = kha.Color.White;

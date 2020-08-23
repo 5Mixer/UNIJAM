@@ -1,6 +1,5 @@
 package entity;
 
-import kha.Assets;
 import kha.graphics2.Graphics;
 import kha.math.Vector2;
 import spriter.Spriter;

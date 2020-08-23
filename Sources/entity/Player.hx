@@ -16,7 +16,7 @@ class Player extends Entity {
 
 	var size:Vector2;
 
-	var airJumps = 0;
+	public var airJumps = 0;
 
 	public var maxJumps = 2;
 
