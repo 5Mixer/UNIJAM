@@ -49,7 +49,7 @@ class Bat extends Entity {
             position.x += Math.cos(Scheduler.realTime()*5)*.5;
             if (player.position.sub(position).length < 1200) {
                 chargeTime++;
-                if (chargeTime > 3*60) {
+                if (chargeTime > 3*60 && entity.progress < .1) {
                     chargeTime = 0;
 
                     targetPosition.x = player.position.x;
@@ -61,7 +61,7 @@ class Bat extends Entity {
                 chargeTime = 0;
             }
         }else if(state == Charge) {
-            var speed = Math.sqrt(targetPosition.sub(position).length) * .8;
+            var speed = 8+Math.sqrt(targetPosition.sub(position).length) * .6;
             position = position.add(targetPosition.sub(position).normalized().mult(speed));
 
             if (player.position.sub(position).length > 200 && player.position.sub(position).length < 1000) {
@@ -69,7 +69,7 @@ class Bat extends Entity {
                 targetPosition.y = player.position.y;
             }
 
-            entity.speed = 1.4;
+            entity.speed = entity.progress < .2 ? .2 : 1;
             if (targetPosition.sub(position).length < 10) {
                 state = Retreat;
             }
