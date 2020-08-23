@@ -40,7 +40,7 @@ class Input {
             onSoulSummon("dagger");
         }
         if (key == KeyCode.Two && onSoulSummon != null) {
-            onSoulSummon("axe");
+            onSoulSummon("shuriken");
         }
     }
     function keyUp(key:KeyCode) {

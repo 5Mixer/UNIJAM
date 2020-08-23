@@ -33,6 +33,7 @@ class Bat extends Entity {
 
     var scale = .5;
     var size:Vector2;
+    var collisionScale = 0.6;
     
     override public function new(player, imageSheet:ImageSheet, spriter:Spriter, position:Vector2) {
         super();
@@ -90,7 +91,8 @@ class Bat extends Entity {
         }
     }
     override public function getCollider() {
-        return Polygon.rectangle(position.x - (size.x * .5), position.y - (size.y), size.x, size.y, false);
+        return Polygon.rectangle(position.x - (size.x * .5) + size.x * (1 - collisionScale) / 2, 
+        position.y - (size.y) + size.y * (1 - collisionScale) / 2, size.x * collisionScale, size.y * collisionScale, false);
     }
     
     override public function render(g:Graphics) {
@@ -98,7 +100,6 @@ class Bat extends Entity {
         .multmat(kha.math.FastMatrix3.scale(scale, scale)));
         g.color = kha.Color.White;
         g.drawSpriter(imageSheet, entity, 0, 0);
-        
         g.popTransformation();
     }
 }

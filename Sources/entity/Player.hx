@@ -271,7 +271,7 @@ class Player extends Entity {
             );
             soul.thrower = this;
             soul.targetPosition = input.getMousePosition();
-		} else if (soulSelection == "axe") {
+		} else if (soulSelection == "shuriken") {
 			soul = new entity.soul.Axe(
                 this.position.add(chestOffset),
                 input.getMousePosition().sub(this.position.add(chestOffset))

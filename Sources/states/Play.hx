@@ -1,5 +1,6 @@
 package states;
 
+import js.html.Image;
 import entity.Entity;
 import kha.math.Vector2;
 import kha.math.FastMatrix3;
@@ -200,14 +201,31 @@ class Play extends State {
 		playerMask.render(g);
 		for (enemy in enemies)
 			enemy.render(g);
+	
 		camera.reset(g);
-		
-		/*g.color = kha.Color.Blue;
-		g.fillRect(0,0,1300,210);
-		g.color = kha.Color.White;
-		for (i in 0...renderPasses.length) {
-			g.drawScaledImage(renderPasses[i].passImage,400*i,0,390,200);
-		}*/
+			
+		var baseIconPosition = new Vector2(40, kha.Window.get(0).height - 160);
+		var iconSize = new Vector2(60, 60);
+		var weaponIcons = new Map<String, kha.Image>();
+		weaponIcons["dagger"] = Assets.images.dagger3;
+		weaponIcons["shuriken"] = Assets.images.shuriken;
+		var count = 0;
+		for (icon in weaponIcons.keys()) {
+			g.color = kha.Color.fromFloats(1,1,1,0.5);
+			g.fillRect(baseIconPosition.x + count * iconSize.x, baseIconPosition.y, iconSize.x, iconSize.y);
+			if (icon == player.soulSelection) {
+				g.color = kha.Color.fromFloats(0.5, 0.5, 0.5, 1);
+			} else {
+				g.color = kha.Color.fromFloats(1,1,1,0.5);
+			}
+			if (icon == "dagger") {
+				g.drawScaledImage(weaponIcons[icon], baseIconPosition.x + (1/8) * iconSize.x, baseIconPosition.y, iconSize.x * (3/4), iconSize.y);
+			} else {
+				g.drawScaledImage(weaponIcons[icon], baseIconPosition.x + count * iconSize.x, baseIconPosition.y, iconSize.x, iconSize.y);
+			}
+			// Last thing
+			count++;
+		}
 	}
 
 	function sketch_rotating(g:Graphics, image, angle, point: Vector2, origin: Vector2, size: Vector2) {
