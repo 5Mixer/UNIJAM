@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.4" tiledversion="1.4.2" orientation="orthogonal" renderorder="right-down" width="20" height="20" tilewidth="16" tileheight="16" infinite="1" nextlayerid="5" nextobjectid="26">
+<map version="1.4" tiledversion="1.4.2" orientation="orthogonal" renderorder="right-down" width="20" height="20" tilewidth="16" tileheight="16" infinite="1" nextlayerid="5" nextobjectid="27">
  <imagelayer id="2" name="Image Layer 1">
   <image source="scene1foregroundcomp.png"/>
  </imagelayer>
@@ -27,7 +27,7 @@
   <object id="17" type="wolf" x="2132" y="1124">
    <point/>
   </object>
-  <object id="18" type="shielder" x="3668" y="1544">
+  <object id="26" type="shielder" x="1120" y="1004">
    <point/>
   </object>
  </objectgroup>

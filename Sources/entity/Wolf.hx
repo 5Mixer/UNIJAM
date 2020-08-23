@@ -25,7 +25,6 @@ class Wolf extends Entity {
     var entity:EntityInstance;
     var imageSheet:ImageSheet;
     
-
 	var velocity:Vector2;
     var gravity = .8;
     
