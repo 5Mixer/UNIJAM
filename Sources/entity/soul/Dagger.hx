@@ -4,6 +4,8 @@ import kha.Assets;
 import kha.graphics2.Graphics;
 import kha.math.Vector2;
 import kha.math.FastMatrix3;
+import differ.shapes.Polygon;
+import differ.shapes.Shape;
 
 enum DaggerState {
     Attack;
@@ -22,6 +24,7 @@ class Dagger extends Soul {
     var scaledSize = new Vector2(60, 80);
     var centerRotationOffset = new Vector2(30, 40);
 
+    var velocity: Vector2 = new Vector2(0,0);
     var angle: Float = 0;
 
     override public function new(position: Vector2) {
@@ -38,19 +41,26 @@ class Dagger extends Soul {
     override public function update(input:Input, level:Level) {
         super.update(input, level); // parses mouse position
 
+        // Collision resolution
+        var collide = resolveCollisions(level.colliders);
+        var isTargetClose = position.sub(targetPosition).length < 20;
+
         // ORDER IMPORTANT
         // transition into idle
-        if (position.sub(targetPosition).length < 20) {
-            if (state == Attack) {
+        if (state == Attack) {
+            if (isTargetClose || collide) {
                 transitionTo(AttackIdle, position);
-            } else if (state == Retract) {
-                // FLAG FOR DESPAWN
-                deactivate();
             }
+        }
+        if (state == Retract && isTargetClose) {
+            // FLAG FOR DESPAWN
+            deactivate();
         } 
         if (input.leftMouseDown && state == AttackIdle) {
             transitionTo(Retract, thrower.position.add(thrower.chestOffset));
         }
+        
+
         if (state == Attack) {
             shootToTarget();
         }
@@ -70,11 +80,27 @@ class Dagger extends Soul {
         state = Inactive;
     }
 
+    function resolveCollisions(geometry:Array<differ.shapes.Shape>) {
+		var collides = false;
+		for (shape in geometry) {
+			var potentialCollision = shape.testPolygon(
+                Polygon.rectangle(position.x, position.y, scaledSize.x / 1.5, scaledSize.y / 1.5,
+                false));
+			if (potentialCollision != null) {
+                collides = true;
+				velocity.x -= potentialCollision.separationX;
+				velocity.y -= potentialCollision.separationY;
+			}
+		}
+		return collides;
+	}
+
     function shootToTarget() {
         // calibrate angle
         var direction = targetPosition.sub(position).normalized();
         angle = Math.atan2(direction.x, -direction.y);
-        position = position.add(direction.mult(baseSpeed));    
+        velocity = direction.mult(baseSpeed);
+        position = position.add(velocity);  
     }
 
     override public function render(g:Graphics) {
