@@ -87,7 +87,7 @@ class Player extends Entity {
             velocity.x = Math.min(speed, velocity.x + acceleration);
             facingRight = true;
 		}
-		if (input.rightMouseDown && soul != null && soul.isActive()) {
+		if (input.rightMouseDown && soul != null && soul.isActive() && soul.isColliding) {
 			velocity = soul.position.sub(position).mult(.1);
 		}
 
@@ -204,20 +204,12 @@ class Player extends Entity {
 				)
 			);
 			g.color = kha.Color.fromFloats(.2,.2,.2,1);
-			g.drawScaledImage(kha.Assets.images.link, from.x, from.y-5, length, 20);
+			g.drawScaledImage(kha.Assets.images.link, from.x, from.y-5, length, 12.5);
 			g.color = kha.Color.fromFloats(.8,.8,.8,1);
-			g.drawScaledImage(kha.Assets.images.link, from.x, from.y, length, 10);
+			g.drawScaledImage(kha.Assets.images.link, from.x, from.y, length, 6.25);
 			g.popTransformation();
 			
 			soul.render(g);
-		}
-		if (debug) {
-			if (onGround) {
-				g.color = kha.Color.Green;
-			} else {
-				g.color = kha.Color.Red;
-			}
-			g.fillRect(position.x, position.y, 10, 10);
 		}
 	}
 
@@ -240,9 +232,9 @@ class Player extends Entity {
 				)
 			);
 			g.color = kha.Color.fromFloats(.2,.2,.2,1);
-			g.drawScaledImage(kha.Assets.images.link, from.x, from.y-5, length, 20);
+			g.drawScaledImage(kha.Assets.images.link, from.x, from.y-5, length, 12.5);
 			g.color = kha.Color.fromFloats(.8,.8,.8,1);
-			g.drawScaledImage(kha.Assets.images.link, from.x, from.y, length, 10);
+			g.drawScaledImage(kha.Assets.images.link, from.x, from.y, length, 6.25);
 			g.popTransformation();
 	}
 
