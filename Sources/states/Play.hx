@@ -96,6 +96,8 @@ class Play extends State {
 		playerTexture.registerRenderer(function(pass) {
 			playerTextureParticles.render(pass.passImage.g2);
 		});
+		playerTexture.passImage.g2.begin(kha.Color.fromFloats(.4*245/255,.4*66/255,.4*105/255));
+		playerTexture.passImage.g2.end();
 
 		// bindings
 		input.onJump = function() {
