@@ -19,8 +19,7 @@ enum WolfState {
 class Wolf extends Entity {
     public var state:WolfState = Idle;
     public var targetPosition:Vector2 = new Vector2();
-    var targetFollowSpeed = 5;
-    var origin = new Vector2(250, 250);
+    var origin = new Vector2(250, 200);
     
     var entity:EntityInstance;
     var imageSheet:ImageSheet;
@@ -31,14 +30,17 @@ class Wolf extends Entity {
     var life = 0;
     var scale = .25;
     var size:Vector2;
+    var speed = 5;
 
     var animation = "run";
+
+    var runningRight = false;
     
     override public function new(imageSheet:ImageSheet, spriter:Spriter, position:Vector2) {
         super();
         this.position = position.mult(1);
         velocity = new Vector2();
-        size = new Vector2(500*scale,500*scale);
+        size = new Vector2(500*scale,450*scale);
 
         entity = spriter.createEntity("enemy1");
         entity.play("run");
@@ -49,6 +51,9 @@ class Wolf extends Entity {
     override public function update(input:Input, level:Level) {
         entity.step(1/60);
         life++;
+
+        velocity.x = runningRight ? speed:-speed;
+
 		var collide = resolveCollisions(level.colliders);
 		if (!collide) {
 			velocity = velocity.add(new Vector2(0, gravity));
@@ -75,7 +80,10 @@ class Wolf extends Entity {
 			var potentialCollision = shape.testPolygon(Polygon.rectangle(position.x - (size.x * .5) + velocity.x, position.y - (size.y) + velocity.y, size.x, size.y,
 				false));
 			if (potentialCollision != null) {
-				collides = true;
+                collides = true;
+                if (Math.abs(potentialCollision.separationX) > .1) {
+                    runningRight = !runningRight;
+                }
 				velocity.x -= potentialCollision.separationX;
 				velocity.y -= potentialCollision.separationY;
 			}
@@ -83,8 +91,11 @@ class Wolf extends Entity {
 		return collides;
 	}
     override public function render(g:Graphics) {
-        g.pushTransformation(g.transformation.multmat(kha.math.FastMatrix3.translation(position.x + (-size.x / 2), position.y-size.y))
-        .multmat(kha.math.FastMatrix3.scale(scale, scale)));
+        var facingRight = runningRight;
+		g.pushTransformation(g.transformation.multmat(kha.math.FastMatrix3.translation(position.x + (facingRight ? size.x / 2 : -size.x / 2), position.y-size.y))
+			.multmat(kha.math.FastMatrix3.scale(scale * (facingRight ? -1 : 1), scale)));
+        // g.pushTransformation(g.transformation.multmat(kha.math.FastMatrix3.translation(position.x + (-size.x / 2), position.y-size.y))
+        // .multmat(kha.math.FastMatrix3.scale(scale, scale)));
         g.color = kha.Color.White;
         g.drawSpriter(imageSheet, entity, 0, 0);
         g.popTransformation();
