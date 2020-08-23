@@ -6,6 +6,8 @@ import kha.math.Vector2;
 import spriter.Spriter;
 import spriter.EntityInstance;
 import imagesheet.ImageSheet;
+import differ.shapes.Polygon;
+import differ.shapes.Shape;
 using spriterkha.SpriterG2;
 
 enum WolfState {
@@ -23,11 +25,21 @@ class Wolf extends Entity {
     var entity:EntityInstance;
     var imageSheet:ImageSheet;
     
+
+	var velocity:Vector2;
+    var gravity = .8;
+    
     var life = 0;
+    var scale = .25;
+    var size:Vector2;
+
+    var animation = "run";
     
     override public function new(imageSheet:ImageSheet, spriter:Spriter, position:Vector2) {
         super();
-        position = position.mult(1);
+        this.position = position.mult(1);
+        velocity = new Vector2();
+        size = new Vector2(500*scale,500*scale);
 
         entity = spriter.createEntity("enemy1");
         entity.play("run");
@@ -38,10 +50,40 @@ class Wolf extends Entity {
     override public function update(input:Input, level:Level) {
         entity.step(1/60);
         life++;
+		var collide = resolveCollisions(level.colliders);
+		if (!collide) {
+			velocity = velocity.add(new Vector2(0, gravity));
+		}
+        position = position.add(velocity);
+        
+        if (Math.abs(velocity.x) > .2 && animation != "run") {
+            entity.play("run");
+            animation = "run";
+            entity.speed = 1;
+        }
+        if (Math.abs(velocity.x) <= .2 && animation != "idle") {
+            // entity.play("idle");
+            entity.play("run");
+            entity.speed = 0;
+            animation = "idle";
+        }
+
+		resolveCollisions(level.colliders);
     }
+    function resolveCollisions(geometry:Array<differ.shapes.Shape>) {
+		var collides = false;
+		for (shape in geometry) {
+			var potentialCollision = shape.testPolygon(Polygon.rectangle(position.x - (size.x * .5) + velocity.x, position.y - (size.y) + velocity.y, size.x, size.y,
+				false));
+			if (potentialCollision != null) {
+				collides = true;
+				velocity.x -= potentialCollision.separationX;
+				velocity.y -= potentialCollision.separationY;
+			}
+		}
+		return collides;
+	}
     override public function render(g:Graphics) {
-        var scale = .25;
-        var size = new Vector2(500*scale,500*scale);
         g.pushTransformation(g.transformation.multmat(kha.math.FastMatrix3.translation(position.x + (-size.x / 2), position.y-size.y))
         .multmat(kha.math.FastMatrix3.scale(scale, scale)));
         g.color = kha.Color.White;
