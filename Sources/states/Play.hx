@@ -97,8 +97,9 @@ class Play extends State {
     override public function update(input:Input) {
 		player.update(input, level);
 		layer.update();
-		for (enemy in enemies)
+		for (enemy in enemies) {
 			enemy.update(input, level);
+		}
 		playerTextureParticles.update();
 		
 		var playerCollider = player.getCollider();
@@ -107,6 +108,17 @@ class Play extends State {
 			if (collision != null) {
 				player.velocity.x = collision.separationX > 0 ? 20 : -20;
 				player.velocity.y -= 5;
+			}
+		}
+		if (player.soul != null) {
+			var soulCollider = player.soul.getCollider();
+			for (enemy in enemies) {
+				var enemyCollider = enemy.getCollider();
+				var collision = (enemyCollider != null) ? soulCollider.testPolygon(enemyCollider) : null;
+				if (collision != null) {
+					// kill enemy
+					trace("enemy dead");
+				}
 			}
 		}
 
