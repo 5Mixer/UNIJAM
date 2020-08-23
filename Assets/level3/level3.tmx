@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.4" tiledversion="1.4.2" orientation="orthogonal" renderorder="right-down" width="20" height="20" tilewidth="16" tileheight="16" infinite="1" nextlayerid="7" nextobjectid="31">
+<map version="1.4" tiledversion="1.4.2" orientation="orthogonal" renderorder="right-down" width="20" height="20" tilewidth="16" tileheight="16" infinite="1" nextlayerid="7" nextobjectid="32">
  <imagelayer id="2" name="Image Layer 1">
-  <image source="Scene3-min.png" width="8000" height="1800"/>
+  <image source="Scene3-min.png"/>
  </imagelayer>
  <objectgroup id="4" name="Colliders">
   <object id="1" x="-7" y="1156">
@@ -26,7 +26,7 @@
    <polygon points="0,0 -18.1818,-812.121 -309.091,-1045.45 -860.606,-181.818 -524.242,503.03 -21.2121,3.0303"/>
   </object>
  </objectgroup>
- <objectgroup id="5" name="Entity">
+ <objectgroup id="5" name="Entities">
   <object id="11" type="spawn" x="233.333" y="906.061">
    <point/>
   </object>
@@ -62,13 +62,11 @@
   </object>
  </objectgroup>
  <objectgroup id="6" name="Zones">
-  <object id="9" type="exit" x="7343" y="1214">
-   <polygon points="0,0 362,-4 341,59 -6,47"/>
-  </object>
   <object id="26" type="checkpoint" x="1986" y="944" width="44" height="254"/>
   <object id="27" type="checkpoint" x="3562" y="708" width="22" height="130"/>
   <object id="28" type="checkpoint" x="4210" y="204" width="40" height="156"/>
   <object id="29" type="checkpoint" x="5054" y="1276" width="72" height="144"/>
   <object id="30" type="checkpoint" x="6532" y="1048" width="36" height="160"/>
+  <object id="31" type="exit" x="7344" y="1215" width="368" height="70"/>
  </objectgroup>
 </map>
