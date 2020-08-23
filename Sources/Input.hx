@@ -15,6 +15,7 @@ class Input {
     public var restart:()->Void;
     
     public var leftMouseDown = false;
+    public var rightMouseDown = false;
     public var mousePosition: Vector2 = new Vector2();
     public var camera: Camera;
 
@@ -61,9 +62,13 @@ class Input {
     function mouseDown(button, x, y) {
         if (button == 0)
             leftMouseDown = true;
+        if (button == 1)
+            rightMouseDown = true;
     }
     function mouseUp(button, x, y) {
         if (button == 0)
             leftMouseDown = false;
+        if (button == 1)
+            rightMouseDown = false;
     }
 }

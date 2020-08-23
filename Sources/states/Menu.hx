@@ -10,11 +10,11 @@ class Menu extends State {
         g.color = Color.White;
         g.fontSize = 60;
         g.font = Assets.fonts.FrederickatheGreat_Regular;
-        g.drawString("Unijam", 100, 100);
+        g.drawString("Unijam", 200, 200);
         g.fontSize = 80;
-        g.drawString("Skin and Soul", 110, 180);
+        g.drawString("Soulink", 210, 280);
         g.fontSize = 30;
-        g.drawString("By Callum, Daniel, and Jordan.", 130, 280);
+        g.drawString("By Callum, Daniel, and Jordan.", 230, 380);
     }
     override public function update(input:Input) {
         if (input.leftMouseDown) {
@@ -22,7 +22,8 @@ class Menu extends State {
             Main.overlay.callback = function() {
                 Main.overlay.callback = null;
                 Main.overlay.endTransition();
-                Main.state = new Play(input);
+                // Main.state = new Play(input);
+                Main.state = new states.CutScene();
             }
         }
     }
