@@ -1,5 +1,6 @@
 package entity;
 
+import kha.math.FastMatrix3;
 import kha.Scheduler;
 import differ.shapes.Ray.InfiniteState;
 import rendering.RenderPass;
@@ -184,7 +185,29 @@ class Player extends Entity {
 		// g.drawRect(0, 0, size.x, size.y);
 
         g.popTransformation();
-		if (soul != null) soul.render(g);
+		if (soul != null){
+			// Draw link
+			var from = new Vector2(position.x, position.y-size.y*.7);
+			var to = new Vector2(soul.position.x+30., soul.position.y+30);
+
+			var length = to.sub(from).length;
+			var angle = Math.atan2(to.y - from.y, to.x - from.x);
+
+			g.pushTransformation(
+				g.transformation.multmat(
+					FastMatrix3.translation(from.x, from.y)
+				).multmat(FastMatrix3.rotation(angle)).multmat(
+					FastMatrix3.translation(-from.x, -from.y)
+				)
+			);
+			g.color = kha.Color.fromFloats(.2,.2,.2,1);
+			g.drawScaledImage(kha.Assets.images.link, from.x, from.y-5, length, 20);
+			g.color = kha.Color.fromFloats(.8,.8,.8,1);
+			g.drawScaledImage(kha.Assets.images.link, from.x, from.y, length, 10);
+			g.popTransformation();
+			
+			soul.render(g);
+		}
 		if (debug) {
 			if (onGround) {
 				g.color = kha.Color.Green;

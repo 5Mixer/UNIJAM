@@ -191,8 +191,8 @@ class Play extends State {
 		layer.render(g);
 		for (system in particleSystems)
 			system.render(g);
-		playerMask.render(g);
 		player.render(g);
+		playerMask.render(g);
 		for (enemy in enemies)
 			enemy.render(g);
 		camera.reset(g);

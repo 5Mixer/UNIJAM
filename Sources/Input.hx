@@ -15,7 +15,7 @@ class Input {
     public var restart:()->Void;
     
     public var leftMouseDown = false;
-    public var mousePosition: Vector2 = null;
+    public var mousePosition: Vector2 = new Vector2();
     public var camera: Camera;
 
     public function new () {
