@@ -23,7 +23,7 @@ class Menu extends State {
                 Main.overlay.callback = null;
                 Main.overlay.endTransition();
                 // Main.state = new Play(input);
-                Main.state = new states.CutScene();
+                Main.state = new states.CutScene(0, new Play(input, 1));
             }
         }
     }

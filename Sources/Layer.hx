@@ -18,6 +18,8 @@ class Layer {
             g.drawImage(kha.Assets.images.level1fg, 0, 0);
         }else if (number == 2) {
             g.drawImage(kha.Assets.images.level2fg, 0, 0);
+        }else{
+            g.drawImage(kha.Assets.images.level3fg, 0, 0);
         }
     }
 }

@@ -12,13 +12,20 @@ class CutScene extends State {
     ];
     var time = 0.;
     var complete = false;
+    var level = 0;
+    var nextState:states.State;
+    override public function new(level:Int=0, after:states.State) {
+        this.level = level;
+        nextState = after;
+        super();
+    }
     override public function render(g:Graphics) {
         time+=.01;
         g.clear(Color.fromBytes(27, 23, 36));
         g.color = Color.White;
         g.fontSize = 80;
         g.font = Assets.fonts.Caveat_Regular;
-        var message = text[0];
+        var message = text[level];
         var lines = message.split("\n");
         var i = 0;
         var opacity = time-1;
@@ -38,8 +45,9 @@ class CutScene extends State {
             Main.overlay.callback = function() {
                 Main.overlay.callback = null;
                 Main.overlay.endTransition();
-                Main.state = new Play(input);
+                Main.state = nextState;
             }
         }
+        super.update(input);
     }
 }

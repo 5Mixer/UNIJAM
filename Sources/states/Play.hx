@@ -110,7 +110,7 @@ class Play extends State {
 		input.onSoulSummon = function(type: String) { 
 			player.changeSoulTo(type); 
 		}
-		input.restart = die;
+		input.restart = nextLevel;
 		input.onDespawn = function() {player.soul.deactivate();}
 	}
 
@@ -127,7 +127,8 @@ class Play extends State {
 		Main.overlay.callback = function() {
 			Main.overlay.callback = null;
 			Main.overlay.endTransition();
-			Main.state = new Play(input, levelNumber+1);
+			// Main.state = ;
+			Main.state = new states.CutScene(levelNumber, new Play(input, levelNumber+1));
 		}
 	}
 
