@@ -33,7 +33,8 @@ class CutScene extends State {
             g.color = kha.Color.fromFloats(.9,.9,.9,Math.max(0,Math.min(1,opacity)));
             g.drawString(line, 200+i*30, 200 + i*100);
             i++;
-            opacity -= 1;
+            // opacity -= 1;
+            opacity += 10;
         }
         if (opacity > 1.3) {
             complete = true;

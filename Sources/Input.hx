@@ -13,6 +13,7 @@ class Input {
     public var onJump:()->Void;
     public var onMouseScroll:(int: Int)->Void;
     public var restart:()->Void;
+    public var cheat:()->Void;
     
     public var leftMouseDown = false;
     public var rightMouseDown = false;
@@ -35,6 +36,9 @@ class Input {
         }
         if (key == KeyCode.R) {
             restart();
+        }
+        if (key == KeyCode.L) {
+            cheat();
         }
         if (key == KeyCode.One && onSoulSummon != null) {
             onSoulSummon("dagger");

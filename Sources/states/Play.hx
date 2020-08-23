@@ -38,8 +38,9 @@ class Play extends State {
 	var spriter:Spriter;
 
 	var levelNumber:Int;
+	var checkpoint:Vector2;
 
-    override public function new(input, levelNumber=1) {
+    override public function new(input, levelNumber=1, checkpoint:Vector2=null) {
 		super();
 		
 		this.input = input;
@@ -82,6 +83,9 @@ class Play extends State {
 
 			enemies.push(entity);
 		}
+		if (checkpoint != null) {
+			player.position = checkpoint.mult(1);
+		}
 
 		playerTextureParticles = new ParticleSystem(100);
 
@@ -111,6 +115,7 @@ class Play extends State {
 			player.changeSoulTo(type); 
 		}
 		input.restart = die;
+		input.cheat = nextLevel;
 		input.onMouseScroll = function(scroll) {
 			if (scroll < 0) {
 				player.soulSelection = "dagger";
@@ -125,7 +130,7 @@ class Play extends State {
 		Main.overlay.callback = function() {
 			Main.overlay.callback = null;
 			Main.overlay.endTransition();
-			Main.state = new Play(input, levelNumber);
+			Main.state = new Play(input, levelNumber, checkpoint);
 		}
 	}
 	function nextLevel() {
@@ -151,8 +156,10 @@ class Play extends State {
 		var playerCollider = player.getCollider();
 		for (zone in level.tiled.zones) {
 			if (playerCollider.testPolygon(zone.collider) != null) {
+				if (zone.type == "checkpoint") {
+					checkpoint = zone.position.mult(1);
+				}
 				if (zone.type == "death") {
-					trace("Death zone");
 					particleSystems.push(new DeathParticleSystem(player.position.mult(1)));
 					die();
 				}
