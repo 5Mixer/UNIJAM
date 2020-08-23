@@ -108,8 +108,21 @@ class Play extends State {
 		for (enemy in enemies)
 			enemy.update(input, level);
 		playerTextureParticles.update();
-		
+
 		var playerCollider = player.getCollider();
+		for (zone in level.tiled.zones) {
+			if (playerCollider.testPolygon(zone.collider) != null) {
+				particleSystems.push(new DeathParticleSystem(player.position.mult(1)));
+
+				Main.overlay.startTransition();
+				Main.overlay.callback = function() {
+					Main.overlay.callback = null;
+					Main.overlay.endTransition();
+					Main.state = new Play(input);
+				}
+			}
+		}
+		
 		for (shielder in shielders) {
 			var collision = playerCollider.testPolygon(shielder.getShieldCollider());
 			if (collision != null) {
