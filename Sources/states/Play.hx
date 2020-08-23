@@ -1,5 +1,6 @@
 package states;
 
+import entity.Entity;
 import kha.math.Vector2;
 import kha.math.FastMatrix3;
 import kha.graphics2.Graphics;
@@ -18,10 +19,8 @@ class Play extends State {
 	var layer:Layer;
 	var level:Level;
     var camera:Camera;
-    
-	var bat:Bat;
-	var wolf:Wolf;
-    var shielder:Shielder;
+	
+	var enemies:Array<Entity> = [];
 	var angle = 0.0;
 
 	var playerTexture:rendering.RenderPass;
@@ -50,11 +49,21 @@ class Play extends State {
 		
 		player = new Player(playerMaskTexture, imageSheet, spriter);
 		layer = new Layer(camera);
-        level = new Level();
-        
-        bat = new entity.Bat(player, imageSheet, spriter);
-        // wolf = new entity.Wolf(imageSheet, spriter);
-        // shielder = new entity.Shielder(imageSheet, spriter);
+		level = new Level();
+		
+		for (tiledEntity in level.tiled.entities) {
+			var entityPosition = tiledEntity.position.mult(1); // Clone position
+			var entity:Entity = switch tiledEntity.type {
+				case "bat": new Bat(player, imageSheet, spriter, entityPosition);
+				case "shielder": new Shielder(imageSheet, spriter, entityPosition);
+				case "wolf": new Wolf(imageSheet, spriter, entityPosition);
+				default: null;
+			};
+			if (entity == null) {
+				throw "Unexpected entity type loaded";
+			}
+			enemies.push(entity);
+		}
 
 		playerTextureParticles = new ParticleSystem();
 
@@ -82,9 +91,8 @@ class Play extends State {
     override public function update(input:Input) {
 		player.update(input, level);
 		layer.update();
-		// wolf.update(input, level);
-		bat.update(input, level);
-		// shielder.update(input, level);
+		for (enemy in enemies)
+			enemy.update(input, level);
         playerTextureParticles.update();
 
 		camera.position.x = Math.max(0, Math.min(8000 - kha.Window.get(0).width, player.position.x - kha.Window.get(0).width/2));
@@ -100,9 +108,8 @@ class Play extends State {
 		layer.render(g);
 		playerMask.render(g);
 		player.render(g);
-		bat.render(g);
-		// wolf.render(g);
-		// shielder.render(g);
+		for (enemy in enemies)
+			enemy.render(g);
 		camera.reset(g);
 		
 		/*g.color = kha.Color.Blue;

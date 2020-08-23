@@ -1,5 +1,6 @@
 package entity;
 
+import kha.Scheduler;
 import kha.Assets;
 import kha.graphics2.Graphics;
 import kha.math.Vector2;
@@ -28,11 +29,11 @@ class Bat extends Entity {
     var chargeTime = 0;
     var player:Player;
     
-    override public function new(player, imageSheet:ImageSheet, spriter:Spriter) {
+    override public function new(player, imageSheet:ImageSheet, spriter:Spriter, position:Vector2) {
         super();
         this.player = player;
-        position = new Vector2(900,900);
-        idlePosition = new Vector2(900,900);
+        this.position = position;
+        idlePosition = position.mult(1); // Clone vector
 
         entity = spriter.createEntity("enemy2");
         entity.play("fly");
@@ -44,6 +45,8 @@ class Bat extends Entity {
         entity.step(1/60);
         if (state == Idle) {
             entity.speed = 1.5;
+            position.y += Math.sin(Scheduler.realTime()*2)*1.0;
+            position.x += Math.cos(Scheduler.realTime()*5)*.5;
             if (player.position.sub(position).length < 1200) {
                 chargeTime++;
                 if (chargeTime > 3*60) {

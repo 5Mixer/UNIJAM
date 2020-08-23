@@ -25,9 +25,9 @@ class Shielder extends Entity {
     
     var life = 0;
     
-    override public function new(imageSheet:ImageSheet, spriter:Spriter) {
+    override public function new(imageSheet:ImageSheet, spriter:Spriter, position:Vector2) {
         super();
-        position = new Vector2(500,800);
+        this.position = position;
 
         entity = spriter.createEntity("enemy3");
         entity.play("idle");

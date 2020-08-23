@@ -10,7 +10,7 @@ class Triangle {
     public function new() {}
 }
 
-class TiledEntity {
+class TiledPolygon {
 	public var properties: Map<String, String>;
 	public var triangles: Array<Triangle>;
 
@@ -27,7 +27,17 @@ class TiledEntity {
 	}
 }
 
+class TiledEntity {
+	public var position:Vector2;
+	public var type:String;
+	public function new(x:Int, y:Int, type:String) {
+		this.position = new Vector2(x, y);
+		this.type = type;
+	}
+}
+
 class Tiled {
+	public var polygons:Array<TiledPolygon> = [];
 	public var entities:Array<TiledEntity> = [];
 
 	public function new (data: String) {
@@ -40,17 +50,19 @@ class Tiled {
 		var map = data.elementsNamed("map").next();
 
 		for (objectLayer in map.elementsNamed("objectgroup")){
-			loadObjectLayer(objectLayer);
+			if (objectLayer.get("name") == "Colliders")
+				loadPolygonLayer(objectLayer);
+			if (objectLayer.get("name") == "Entities")
+				loadEntityLayer(objectLayer);
 		}
 	}
 
-	// WARNING: Polygon-specific
-	function loadObjectLayer(objectLayer: Xml) {
+	function loadPolygonLayer(objectLayer: Xml) {
 		for (object in objectLayer.elements()){
 			var x = Std.parseInt(object.get("x"));
 			var y = Std.parseInt(object.get("y"));
 			for (element in object.elements()){
-				var entity = new TiledEntity();
+				var entity = new TiledPolygon();
 				if (element.nodeName == "properties"){
 					entity.properties = new Map<String, String>();
 					for (property in element.elements()){
@@ -68,8 +80,18 @@ class Tiled {
 					}
 					entity.triangles = triangulate(points);
 				}
-				entities.push(entity);
+				polygons.push(entity);
 			}
+		}
+	}
+
+	function loadEntityLayer(objectLayer: Xml) {
+		for (object in objectLayer.elements()){
+			var x = Std.parseInt(object.get("x"));
+			var y = Std.parseInt(object.get("y"));
+			var type = object.get("type");
+
+			entities.push(new TiledEntity(x, y, type));
 		}
 	}
 		

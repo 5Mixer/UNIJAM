@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.4" tiledversion="1.4.2" orientation="orthogonal" renderorder="right-down" width="20" height="20" tilewidth="16" tileheight="16" infinite="1" nextlayerid="4" nextobjectid="4">
+<map version="1.4" tiledversion="1.4.2" orientation="orthogonal" renderorder="right-down" width="20" height="20" tilewidth="16" tileheight="16" infinite="1" nextlayerid="5" nextobjectid="17">
  <imagelayer id="2" name="Image Layer 1">
-  <image source="scene1foregroundcomp.png" width="8000" height="1800"/>
+  <image source="scene1foregroundcomp.png"/>
  </imagelayer>
  <objectgroup id="3" name="Colliders">
   <object id="2" x="0" y="1555.25">
@@ -9,6 +9,23 @@
   </object>
   <object id="3" x="59" y="672">
    <polygon points="0,0 125,438 180,756 21,674 28,851 52,884 -80,899"/>
+  </object>
+ </objectgroup>
+ <objectgroup id="4" name="Entities">
+  <object id="4" type="bat" x="3110.67" y="686.667">
+   <point/>
+  </object>
+  <object id="5" type="bat" x="3364" y="832">
+   <point/>
+  </object>
+  <object id="6" type="bat" x="3997.33" y="821.333">
+   <point/>
+  </object>
+  <object id="7" type="bat" x="3660" y="614.667">
+   <point/>
+  </object>
+  <object id="8" type="bat" x="3680" y="1020">
+   <point/>
   </object>
  </objectgroup>
 </map>

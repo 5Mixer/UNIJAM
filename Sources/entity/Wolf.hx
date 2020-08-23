@@ -25,9 +25,9 @@ class Wolf extends Entity {
     
     var life = 0;
     
-    override public function new(imageSheet:ImageSheet, spriter:Spriter) {
+    override public function new(imageSheet:ImageSheet, spriter:Spriter, position:Vector2) {
         super();
-        position = new Vector2(500,800);
+        position = position.mult(1);
 
         entity = spriter.createEntity("enemy1");
         entity.play("run");
