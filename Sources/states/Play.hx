@@ -166,7 +166,9 @@ class Play extends State {
 				var collision = (enemyCollider != null) ? soulCollider.testPolygon(enemyCollider) : null;
 				if (collision != null) {
 					enemies.remove(enemy);
-					// enemy.kill();
+					if (Std.is(enemy, Shielder)) {
+						shielders.remove(cast enemy);
+					}
 				}
 			}
 		}
