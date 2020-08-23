@@ -1,5 +1,8 @@
 package entity;
 
+import differ.shapes.Ray.InfiniteState;
+import differ.math.Vector;
+import differ.sat.SAT2D;
 import rendering.RenderPass;
 import differ.shapes.Polygon;
 import differ.shapes.Shape;
@@ -35,6 +38,7 @@ class Player extends Entity {
     public var chestOffset = new Vector2(-50, -100); // offset from player position to get chest
     
     var scale = .25;
+    var onGround = false;
 
     var facingRight = true;
 
@@ -53,6 +57,13 @@ class Player extends Entity {
 
 	override public function update(input:Input, level:Level) {
 		entity.step(1/60);
+
+        onGround = false;
+		for (shape in level.colliders) {
+            if (shape.testPolygon(Polygon.rectangle(position.x-(size.x*.5)+velocity.x, position.y+velocity.y, size.x, 25, false)) != null) {
+                onGround = true;
+            }
+        }
 
 		// Left/right change horizontal velocity
 		if (input.left) {
@@ -73,17 +84,18 @@ class Player extends Entity {
 				velocity.x = 0;
 			}
 		}
+
 		// Gravity
 		var collide = resolveCollisions(level.colliders);
 		if (!collide) {
 			velocity = velocity.add(new Vector2(0, gravity));
-		}
+        }
 
 		// Cap velocity add speed and apply
 		// velocity.x = Math.min(Math.abs(velocity.x), speed) * (velocity.x > 0 ? 1 : -1);
 		position = position.add(velocity);
 
-		resolveCollisions(level.colliders);
+        resolveCollisions(level.colliders);
 
 		if (Math.abs(velocity.x) < 2 && animation != "idle") {
 			entity.transition("idle", .1);
@@ -117,10 +129,13 @@ class Player extends Entity {
 			if (potentialCollision != null) {
 				collides = true;
 				velocity.x -= potentialCollision.separationX;
-				velocity.y -= potentialCollision.separationY;
+                velocity.y -= potentialCollision.separationY;
+                if (potentialCollision.separationY > 0) {
+                    onGround = true;
+                }
 				airJumps = 0;
 			}
-		}
+        }
 		return collides;
 	}
 
@@ -151,7 +166,7 @@ class Player extends Entity {
         // g.fillRect(position.x - size.x/2, position.y - size.y, size.x, size.y);
 		g.pushTransformation(g.transformation.multmat(kha.math.FastMatrix3.translation(position.x + (facingRight ? -size.x / 2 : size.x / 2), position.y-size.y))
 			.multmat(kha.math.FastMatrix3.scale(scale * (facingRight ? 1 : -1), scale)));
-        g.color = kha.Color.White;
+        g.color = onGround? kha.Color.Black:kha.Color.White;
 		g.drawSpriter(imageSheet, entity, 0, 0);
 
         g.popTransformation();
