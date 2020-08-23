@@ -9,7 +9,8 @@ class Level {
 
     public function new(levelNumber) {
         tiled = new Tiled(switch levelNumber {
-            case 1: kha.Assets.blobs.level2_tmx.toString();
+            case 1: kha.Assets.blobs.level1_tmx.toString();
+            case 2: kha.Assets.blobs.level2_tmx.toString();
             default: "";
         });
         for (polygon in tiled.polygons){

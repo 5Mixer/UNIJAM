@@ -56,7 +56,7 @@ class Play extends State {
 		spriter = Spriter.parseScml(kha.Assets.blobs.animations_scml.toString());
 		
 		player = new Player(playerMaskTexture, imageSheet, spriter);
-		layer = new Layer(camera);
+		layer = new Layer(camera, levelNumber);
 		level = new Level(levelNumber);
 		
 		for (tiledEntity in level.tiled.entities) {
@@ -124,7 +124,7 @@ class Play extends State {
 		Main.overlay.callback = function() {
 			Main.overlay.callback = null;
 			Main.overlay.endTransition();
-			Main.state = new Play(input, levelNumber++);
+			Main.state = new Play(input, levelNumber+1);
 		}
 	}
 
@@ -142,6 +142,7 @@ class Play extends State {
 		for (zone in level.tiled.zones) {
 			if (playerCollider.testPolygon(zone.collider) != null) {
 				if (zone.type == "death") {
+					trace("Death zone");
 					particleSystems.push(new DeathParticleSystem(player.position.mult(1)));
 					die();
 				}

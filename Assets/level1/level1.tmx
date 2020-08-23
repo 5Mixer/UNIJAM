@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.4" tiledversion="1.4.2" orientation="orthogonal" renderorder="right-down" width="20" height="20" tilewidth="16" tileheight="16" infinite="1" nextlayerid="6" nextobjectid="46">
+<map version="1.4" tiledversion="1.4.2" orientation="orthogonal" renderorder="right-down" width="20" height="20" tilewidth="16" tileheight="16" infinite="1" nextlayerid="6" nextobjectid="47">
  <imagelayer id="2" name="Image Layer 1">
   <image source="../Scene1/scene1foregroundcomp.png"/>
  </imagelayer>
@@ -11,8 +11,8 @@
    <polygon points="0,0 125,438 180,756 21,674 28,851 52,884 -80,899"/>
   </object>
  </objectgroup>
- <objectgroup id="5" name="Zones" offsetx="6744" offsety="-205.697">
-  <object id="36" type="exit" x="1210.79" y="1500.61" width="242.424" height="278.788"/>
+ <objectgroup id="5" name="Zones">
+  <object id="36" type="exit" x="7310.79" y="1444.61" width="1658.42" height="278.788"/>
  </objectgroup>
  <objectgroup id="4" name="Entities">
   <object id="4" type="bat" x="3110.67" y="686.667">
