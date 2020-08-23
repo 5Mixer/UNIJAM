@@ -6,7 +6,7 @@ import kha.graphics2.Graphics;
 
 class CutScene extends State {
     var text = [
-        "With a bound soul,\n you embark into the demon filled wilderness.",
+        "With a bound soul,\n you embark into the demon-filled wilderness.",
         "You fall -\n to your doom,\n or the depths below?",
         "After your trials,\n you emerge to a place long forgotten,\n a place long rotted."
     ];

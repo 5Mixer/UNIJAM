@@ -33,7 +33,10 @@ class Dagger extends Soul {
 
     override public function new(position: Vector2) {
         super(position);
-        Audio.play(Assets.sounds.shortKnifeSlice);
+        var sounds = [Assets.sounds.shortKnifeSlice, Assets.sounds.knifeSlice];
+        var slashChannel = Audio.play(sounds[Math.floor(Math.random() * sounds.length)]);
+        slashChannel.volume = .1+Math.random()*.1;
+        slashChannel.play();
     }
 
     function transitionTo(newState: DaggerState, newTarget: Vector2) {

@@ -1,6 +1,7 @@
 package entity.soul;
 
 import kha.Assets;
+import kha.audio1.Audio;
 import kha.graphics2.Graphics;
 import kha.math.Vector2;
 import kha.math.FastMatrix3;
@@ -44,6 +45,10 @@ class Axe extends Soul {
         super(position);
         // EDIT
         velocity = direction.normalized().mult(throwSpeed);
+        var sounds = [Assets.sounds.shortKnifeSlice, Assets.sounds.knifeSlice];
+        var slashChannel = Audio.play(sounds[Math.floor(Math.random() * sounds.length)]);
+        slashChannel.volume = .1+Math.random()*.1;
+        slashChannel.play();
     }
 
     function transitionTo(newState: AxeState) {

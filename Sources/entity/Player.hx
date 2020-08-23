@@ -40,7 +40,7 @@ class Player extends Entity {
     var animation = "idle";
 
     public var soul: Soul = null;
-    public var soulSelection = "";
+    public var soulSelection = "dagger";
     public var chestOffset = new Vector2(-50, -100); // offset from player position to get chest
     
     var scale = .25;

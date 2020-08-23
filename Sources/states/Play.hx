@@ -110,8 +110,14 @@ class Play extends State {
 		input.onSoulSummon = function(type: String) { 
 			player.changeSoulTo(type); 
 		}
-		input.restart = nextLevel;
-		input.onDespawn = function() {player.soul.deactivate();}
+		input.restart = die;
+		input.onMouseScroll = function(scroll) {
+			if (scroll < 0) {
+				player.soulSelection = "dagger";
+			} else {
+				player.soulSelection = "shuriken";
+			}
+		}
 	}
 
 	function die() {
