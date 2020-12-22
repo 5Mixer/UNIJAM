@@ -76,14 +76,16 @@ class Main {
 		camera.transform(g2);
 		level.render(g2);
 		layer.render(g2);
-		playerMask.render(g2);
+		player.render(g2);
+		// playerMask.render(g2);
 		camera.reset(g2);
-		g2.color = kha.Color.Blue;
-		g2.fillRect(0,0,1300,210);
-		g2.color = kha.Color.White;
-		for (i in 0...renderPasses.length) {
-			g2.drawScaledImage(renderPasses[i].passImage,400*i,0,390,200);
-		}
+		
+		// g2.color = kha.Color.Blue;
+		// g2.fillRect(0,0,1300,210);
+		// g2.color = kha.Color.White;
+		// for (i in 0...renderPasses.length) {
+		// 	g2.drawScaledImage(renderPasses[i].passImage,400*i,0,390,200);
+		// }
 		g2.end();
 	}
 
