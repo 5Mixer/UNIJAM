@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.4" tiledversion="1.4.2" orientation="orthogonal" renderorder="right-down" width="20" height="20" tilewidth="16" tileheight="16" infinite="1" nextlayerid="7" nextobjectid="32">
+ <imagelayer id="2" name="Image Layer 1">
+  <image source="Scene32-min.png" width="8000" height="1800"/>
+ </imagelayer>
+ <objectgroup id="4" name="Colliders">
+  <object id="1" x="-7" y="1156">
+   <polygon points="0,0 1374,0 2090,3 2561,3 2808,247 3898,249 3897,33 3862,31 3865.33,-279 3285,-278.667 3286.67,-325.667 3865,-329.333 3865,-639 3465.67,-641.667 3462,-690.333 3862,-690 3862,-728 3811,-738 3968,-830 4267,-831 4292,-734 3990,-730 3988,-169 4192,-168 4193,-114 3980,-119 3979,35 3956,35 3953,248 4123,251 4192,183 4522,182 4588,249 5400,248 5908,251 6156,2 7313,1 7406,99 7630,97 7715,2 7812,0 7876,3 7884,-223 7722,-139 7803,-557 7909,-915 7880,-1165 8147,-1116 8198,-293 8100,339 7507,789 5546.39,604.606 4125.18,795.515 2782.76,547.03 961.545,656.121 -123.303,519.758 -538.455,219.758"/>
+  </object>
+  <object id="2" x="1937.33" y="854.667">
+   <polygon points="0,0 0,56 630.667,57.3333 868,-174.667 1426.67,-190 1428,-225.333 696,-224 692,-177.333 792,-176 622.667,-4"/>
+  </object>
+  <object id="5" x="4021.33" y="161.333">
+   <polygon points="0,0 0,-161.333 657.333,-161.333 653.333,-4 632,-1.33333 628,164 708,161.333 878.667,252 881.333,293.333 1386.67,304 1390.67,354.667 830.667,354.667 826.667,616 1400,618.667 1409.33,672 829.333,678.667 826.667,1022.67 704,1026.67 704,872 498.667,877.333 497.333,830.667 701.333,826.667 702.667,260 397.333,262.667 420,161.333 590.667,161.333 592,1.33333 568,-2.66667 569.333,-106.667 96,-110.667 92,-2.66667"/>
+  </object>
+  <object id="6" x="5337.33" y="629.333">
+   <polygon points="0,0 -4,46.6667 562.667,45.3333 790.667,284 1428,281.333 1425.33,225.333 808,224 626.667,42.6667 736,46.6667 732,1.33333"/>
+  </object>
+  <object id="7" x="5389.33" y="1040">
+   <polygon points="0,0 0,60 553.333,61.3333 550.667,4"/>
+  </object>
+  <object id="8" x="2762" y="1041">
+   <polygon points="0,0 -2,58 546,60 552,-1"/>
+  </object>
+  <object id="10" x="-12.1212" y="1236.36">
+   <polygon points="0,0 -18.1818,-812.121 -309.091,-1045.45 -860.606,-181.818 -524.242,503.03 -21.2121,3.0303"/>
+  </object>
+ </objectgroup>
+ <objectgroup id="5" name="Entities">
+  <object id="11" type="spawn" x="233.333" y="906.061">
+   <point/>
+  </object>
+  <object id="12" type="wolf" x="3180" y="1292">
+   <point/>
+  </object>
+  <object id="14" type="shielder" x="4568" y="896">
+   <point/>
+  </object>
+  <object id="15" type="wolf" x="4184" y="1206">
+   <point/>
+  </object>
+  <object id="16" type="wolf" x="5384" y="1278">
+   <point/>
+  </object>
+  <object id="18" type="bat" x="3104" y="92">
+   <point/>
+  </object>
+  <object id="19" type="bat" x="3500" y="176">
+   <point/>
+  </object>
+  <object id="21" type="bat" x="5702" y="216">
+   <point/>
+  </object>
+  <object id="22" type="shielder" x="5796" y="1334">
+   <point/>
+  </object>
+  <object id="23" type="bat" x="6808" y="574">
+   <point/>
+  </object>
+  <object id="24" type="bat" x="5820" y="800">
+   <point/>
+  </object>
+ </objectgroup>
+ <objectgroup id="6" name="Zones">
+  <object id="26" type="checkpoint" x="1986" y="944" width="44" height="254"/>
+  <object id="27" type="checkpoint" x="3562" y="708" width="22" height="130"/>
+  <object id="28" type="checkpoint" x="4210" y="204" width="40" height="156"/>
+  <object id="29" type="checkpoint" x="5054" y="1276" width="72" height="144"/>
+  <object id="30" type="checkpoint" x="6532" y="1048" width="36" height="160"/>
+  <object id="31" type="exit" x="7357.58" y="1200" width="315.152" height="93.9394"/>
+ </objectgroup>
+</map>
